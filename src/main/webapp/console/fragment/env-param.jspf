@@ -1,0 +1,52 @@
+<%
+	boolean isLogin = false;
+	String accountId = "";
+	
+	if (session != null) {
+		if (session.getAttribute("accountId") != null) {
+			isLogin = true;
+			accountId = (String) session.getAttribute("accountId");
+		} else {
+			response.sendRedirect("../index.jsp");
+		}
+	}
+	
+%>
+
+<script type="text/javascript">
+var domain = '<%= System.getenv("domain") %>';
+var contextRoot = '<%= application.getContextPath() %>';
+var accountId = '<%= accountId %>';
+var botId;
+
+if (localStorage.botId) {
+	botId = localStorage.botId;
+} else {
+	botId = '';
+}
+
+var sending_text = '<fmt:message key="btt.sending" />';
+var notification_text = '<fmt:message key="btt.notification" />';
+
+function logout() {
+
+	  <% if (session.getAttribute("accountId") != null) { %>
+	  
+	 	var xhr = new XMLHttpRequest();
+	 	xhr.open("GET", contextRoot + "/logout", true);
+	 	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	 	xhr.send();
+
+	 	xhr.onreadystatechange = function() {
+	 	  	if (xhr.readyState == 4 && xhr.status == 200) {		 
+	 			if (xhr.responseText == "success") {
+	 				
+					window.location.href = domain + contextRoot + "/x/" + accountId + "/" + botId;
+	 				
+	 			}
+	 		}
+	 	}	
+	 	
+	 	<% } %>
+	};
+</script>

@@ -1,0 +1,71 @@
+<%@ page language="java" %>
+
+<script src="../../wayosapp.js"></script>
+<script src="../../widget.js"></script>
+
+<%
+
+	String playURL = request.getParameter("playURL");
+
+	if (playURL!=null) { 
+
+		String sessionId = request.getParameter("sessionId");
+	
+		if (sessionId==null) {
+			sessionId = "" + System.currentTimeMillis();
+		}
+		
+%>
+
+<script>
+	
+	wayOS = new WayOS("<%= playURL %>", "<%= sessionId %>");
+	
+	wayOS.onload = function(props) {
+		
+		/**
+		{
+			"borderColor":"#1d4529",
+			"publish":"true",
+			"description":"",
+			"language":"TH",
+			"sessionId":"thewalk001",
+			"title":"",
+			"coverImageURL":"http://localhost:8080/public/sitcom/ep0.PNG",
+			"defaultMenuImageURL":"http://localhost:8080/images/gigi.png"}		*/
+		console.log("Apply Theme: " + JSON.stringify(props));
+		
+		let image = new Image();
+		image.src = props.coverImageURL;
+		image.onload = function() {
+			document.body.style.backgroundImage = "url('" + props.coverImageURL + "')";
+			document.body.style.backgroundRepeat = "no-repeat";
+			document.body.style.backgroundAttachment = "fixed";
+			document.body.style.backgroundSize = "100% 100%";
+		}
+		
+		image.onerror = function() {
+			document.body.style.backgroundColor = props.borderColor;
+		}
+		
+		
+	}
+	
+	wayOS.load("greeting");
+		
+	console.log("Connecting to " + wayOS.playURL + " with sessionId " + wayOS.sessionId);
+	
+</script>
+
+<% } %>
+
+<script>
+var debugging = <%= request.getParameter("debug") != null %>;
+
+var debugElement = document.createElement('span');
+
+function debug(text) {
+	
+	debugElement.innerText = text;
+}
+</script>

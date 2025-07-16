@@ -1,0 +1,167 @@
+<%@ page pageEncoding="UTF-8"%>
+<script src="js/lib/jquery.3.2.1.min.js" type="text/javascript"></script>
+<script src="js/lib/bootstrap.min.js" type="text/javascript"></script>
+<script src="js/lib/light-bootstrap-dashboard.js" type="text/javascript"></script>
+
+<script src="js/util.js" type="text/javascript"></script>
+<script src="js/qrcode.js" type="text/javascript"></script>
+
+<script src="../wayosapp.js"></script>
+<script src="../widget.js"></script>
+
+<script type="text/javascript">
+
+function playAudio (src) {
+	
+	let audio = new Audio();
+	
+	audio.src = src;
+			
+	audio.play();
+			
+}
+
+function updateAllUnreadMessages(playURL, targetClassName) {
+	
+		let xhr = new XMLHttpRequest();
+		
+		let url = playURL.replace('/x/', '/console/unread/');
+		
+		xhr.open("GET", url); 
+		
+		xhr.onload = function() {
+		 
+		    if (xhr.status === 200) {
+		    	
+		    	//console.log("All unread messages:" + xhr.responseText);
+		    	
+		    	let allUnread = parseInt(xhr.responseText);
+		    	
+		    	let unreadString;
+				if (allUnread > 0) {
+				
+					unreadString = "&nbsp;(" + allUnread + ")";
+				
+				} else {
+					
+					unreadString = "";
+				}
+				
+				let targetHtmlElements = document.getElementsByClassName(targetClassName);
+				
+				if (targetHtmlElements) {
+					for (let i in targetHtmlElements) {
+						targetHtmlElements[i].innerHTML = unreadString;
+					}							
+				}
+		    }
+			
+		}.bind(this);
+		
+		xhr.send();				
+}
+
+function onSelectBotListChanged(changed) {
+		
+	botId = $('#selectbotlist').val();
+	localStorage.botId = botId;
+	
+	//console.log("#selectbotlist changed to " + botId);
+	
+	if (onBotListLoaded) {
+		onBotListLoaded(changed);
+	}
+	
+	wayOS = new WayOS(domain + contextRoot + "/x/" + accountId + "/" + botId, '');
+	
+	wayOS.load("ลงทะเบียนผู้ดูแล!");
+	
+	wayOS.onload = function(props) {
+
+		//console.log("wayOS.onload>>" + JSON.stringify(props));
+				
+		//Generate QRCode logo
+		$("#qrcode").empty();
+		
+		var qrcode = new QRCode("qrcode", {
+		    text: wayOS.playURL,
+		    width: 256,
+		    height: 256,
+		    colorDark : "#000000",
+		    //colorLight : props.borderColor,
+		    //colorLight : "#ABD3E7",
+		    colorLight : "#ffffff",
+		    correctLevel : QRCode.CorrectLevel.H,
+		    marginTop: "15"
+		});
+		
+		qrcode.makeCode(wayOS.playURL);		
+		
+		$("#qrcode img").css('margin-top', '15px');
+	}
+
+	wayOS.onmessages = function(messages) {
+		
+		//console.log("wayOS.onmessages>>" + JSON.stringify(messages));
+		
+	  	updateAllUnreadMessages(wayOS.playURL, "unread");
+	  	
+		if (messages.length===1) {
+			
+			/**
+			* Do logout if another admin for this contextName is authenticated from another location!
+			*/
+			if (messages[0].type==='text') {
+				
+				if (messages[0].text==='..(-.-)') {
+					
+					alert('Administrator of ' + accountId + "/" + botId + ' has authenticated from another location!');
+					//TODO: Logout()
+					logout();
+					return;
+					
+				} else if (messages[0].text==='(^o^)ๆ') {
+					
+					//No need to play alarm incase of click to register
+					return;
+				}
+				
+			}
+									
+		}
+			  	
+		playAudio(domain + contextRoot + '/public/eoss-th/question_003.ogg');
+		
+		//TODO: trigger click if report.jsp!
+		if ($( "#nowReportTab" ).length ) {
+ 
+			$("#nowReportTab").trigger("click"); 
+						
+			setTimeout(function() {
+				//$("html, body").animate({ scrollTop: $(document).height() }, 1000);				
+				$("#lastLetter").fadeOut();
+				$("#lastLetter").fadeIn();
+			}, 1000);
+		}		
+		
+	};	
+
+}
+
+$("#selectbotlist").change(function() {
+	onSelectBotListChanged(true);
+});	
+
+$(document).ready(function() {
+
+	var pagename = location.pathname.substring(location.pathname.lastIndexOf("/") + 1) + "";
+	pagename = pagename.replace(".jsp","");
+	$("."+pagename).addClass("active");
+	$("#PageName").html(pagename.replace("-"," "));
+	
+	$.when(getBotList(contextRoot + "/console/context/" + accountId + "/", "#selectbotlist")).done(function() {	
+		onSelectBotListChanged();
+	});
+	
+});
+</script>
