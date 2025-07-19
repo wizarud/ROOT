@@ -1,5 +1,6 @@
 package listener;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -17,6 +18,7 @@ import com.wayos.pusher.WebPusher;
 import com.wayos.storage.DirectoryStorage;
 import com.wayos.util.ConsoleUtil;
 import com.wayos.util.SilentPusher;
+import com.wayos.util.SilentPusherTask;
 
 import x.org.json.JSONObject;
 
@@ -104,44 +106,33 @@ public class AppListener implements ServletContextListener {
 		/**
 		 * Load pending task from saved file
 		 */
-		List<String> taskList = storage.listObjectsWithPrefix("silent");
-		JSONObject silentObj;
-		double silentInterval;
-		String accountId;
-		String botId;
-		String channel;
-		String sessionId;
-
+		List<String> targetList = storage.listObjectsWithPrefix("silent");
+		JSONObject cronObj;
 		String [] tokens;
-		for (String task:taskList) {
+		for (String target:targetList) {
+			
+			cronObj = storage.readAsJSONObject("silent/" + target);
 
-			try {
+			if (cronObj==null) continue;
+			
+			String cronExpression = cronObj.getString("interval");
+			tokens = target.split("\\.");
+			String accountId = tokens[0];
+			String botId = tokens[1];
+			String channel = tokens[2];
+			String sessionId = tokens[3];
+			String messageToFire = tokens[4];
+			
+			SilentPusherTask silentPusherTask = new SilentPusherTask(cronExpression, accountId + "/" + botId, channel, sessionId, messageToFire);
+			
+			ZonedDateTime next = silentPusher.register(silentPusherTask);
+			
+			System.out.println(target + " will execute at " + next);
 
-				silentObj = storage.readAsJSONObject("silent/" + task);
-
-				if (silentObj==null) continue;
-
-				silentInterval = silentObj.getDouble("interval");
-
-				System.out.println("Repeat: " + task + " every " + silentInterval + " hours..");
-
-				tokens = task.split("\\.");
-				accountId = tokens[0];
-				botId = tokens[1];
-				channel = tokens[2];
-				sessionId = tokens[3];
-
-				silentPusher.register(silentInterval, accountId + "/" + botId, channel, sessionId, false);
-
-			} catch (Exception e) {
-
-				e.printStackTrace();
-
-			}
-		}
+		}		
 
 	}
-
+	
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 

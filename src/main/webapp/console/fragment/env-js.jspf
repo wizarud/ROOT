@@ -72,7 +72,7 @@ function onSelectBotListChanged(changed) {
 		onBotListLoaded(changed);
 	}
 	
-	wayOS = new WayOS(domain + contextRoot + "/x/" + accountId + "/" + botId, '');
+	wayOS = new WayOS(domain + contextRoot + "/x/" + accountId + "/" + botId, 'dashboard');
 	
 	wayOS.load("ลงทะเบียนผู้ดูแล!");
 	

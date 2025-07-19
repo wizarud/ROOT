@@ -423,6 +423,16 @@ limz_Application = Class.extend(
 	                        
 	            return responses.join(" ").trim();
 	        },        
+			
+			refresh: function() {
+				
+				if (this.contextId) {
+					
+					this.load(this.contextId);
+					
+				}
+				
+			},
 	        
 	        load: function (contextId) {
 				

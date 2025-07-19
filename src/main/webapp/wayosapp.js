@@ -22,6 +22,7 @@ class WayOS {
 		this.defaultMenuImageURL = this.webhookURL.substring(0, this.webhookURL.indexOf('/webhooks')) + '/images/gigi.png';
 
 		this.sessionId = sessionId;
+		
 		//Default callbacks, For debugging purpose!
 		
 		this.onload = function(props) {
@@ -58,15 +59,25 @@ class WayOS {
 
 			//Use last sessionId
 			this.sessionId = localStorage.getItem(this.websocketURL);
-			//console.log("LocalStorage sessionId " + this.sessionId);
 			
-		}
+			//Logic-designer is specifi sessionId
+			if (this.sessionId === 'logic-designer') {
+				delete this.sessionId;
+				localStorage.removeItem('logic-designer');
+				
+			}
+			console.log("LocalStorage sessionId " + this.sessionId);
+			
+			this.useServerGenerateSessionId = true;
+			
+		} 
 		 		
 		if (this.sessionId) {
+			
 			url += "?sessionId=" + this.sessionId;				
 		}
 		
-	 	var xhr = new XMLHttpRequest();
+	 	var xhr = new XMLHttpRequest();		
 	 	xhr.open("GET", url, true);
 	 	
 	 	xhr.onload = function() {
@@ -74,8 +85,14 @@ class WayOS {
 	 	  	if (xhr.status === 200) {
 	 	  	
 				this.props = JSON.parse(xhr.responseText);
-				this.sessionId = this.props.sessionId;
-				localStorage.setItem(this.websocketURL, this.sessionId);
+								
+				if (this.useServerGenerateSessionId) {
+					
+					this.sessionId = this.props.sessionId;
+					
+					localStorage.setItem(this.websocketURL, this.sessionId);
+				
+				}
 				//console.log("INIT " + url + " with sessionId:" + this.sessionId);
 				
 				//Designer can override cover image in properties pane

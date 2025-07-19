@@ -24,6 +24,23 @@
 	background-color: rgba(0, 0, 0, 0.5);
 	z-index: 10000;
 }
+
+.debug-toast {
+    position: fixed;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    transform: translate(-50%, -50%); /* Center anchor */
+}
+
+.debug-toast.show {
+    opacity: 1;
+}
+
 </style>
 
 <SCRIPT src="./diagram_assets/draw2d/lib/shifty.js"></SCRIPT>
@@ -148,6 +165,8 @@
 		<div class="modal-footer"></div>
 	</div>
 	
+	<script src="../wayosapp.js"></script>
+
 	<script type="text/javascript">
 	
         var app = null;
@@ -273,7 +292,136 @@
     		  // Prevent default behavior (Prevent file from being opened)
 			  ev.stopPropagation();
     		  ev.preventDefault();    		  
-    	}    	
+    	}
+    	
+    	function debugToast(message, color, x, y, duration = 3000) {
+    		
+    	    // Create toast element
+    	    const toast = document.createElement('div');
+    	    toast.className = 'debug-toast';
+    	    toast.innerText = message;
+
+    	    // Position the toast
+    	    toast.style.left = x + 'px';
+    	    toast.style.top = y + 'px';
+    	    toast.style.backgroundColor = color;
+
+    	    // Add to body
+    	    document.body.appendChild(toast);
+
+    	    // Trigger show animation
+    	    setTimeout(() => toast.classList.add('show'), 10);
+
+    	    // Remove after duration
+    	    setTimeout(() => {
+    	    	
+    	      toast.classList.remove('show');
+    	      setTimeout(() => toast.remove(), 500); // Wait for fade out
+    	      
+    	    }, duration);
+    	    
+    	}
+    	
+    	function getHexColorFromSessionId(sessionId) {
+    		  // Hash the string to a number
+    		  let hash = 0;
+    		  for (let i = 0; i < sessionId.length; i++) {
+    		    hash = sessionId.charCodeAt(i) + ((hash << 5) - hash);
+    		  }
+
+    		  // Generate RGB components from hash
+    		  const r = (hash >> 16) & 0xff;
+    		  const g = (hash >> 8) & 0xff;
+    		  const b = hash & 0xff;
+
+    		  // Convert to hex and pad with zeroes if needed
+    		  const toHex = (n) => n.toString(16).padStart(2, '0');
+
+    		  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+    	}
+    	
+		const centerX = window.innerWidth / 2;
+		const centerY = window.innerHeight / 2;    		
+		
+    	wayOS = new WayOS(domain + contextRoot + "/x/" + accountId + "/" + botId, 'logic-designer');
+    	
+    	wayOS.load("greeting");
+    	
+    	wayOS.onload = function(props) {
+
+    		console.log("Logic Designer wayOS.onload>>" + JSON.stringify(props));
+    		
+			// Show toast in the center of the screen
+    		debugToast("Ready for Realtime Debugging.. ", getHexColorFromSessionId(props.sessionId), centerX, centerY, 3000);
+    				
+    	}
+
+    	wayOS.onmessages = function(messages) {
+    		
+    		console.log("wayOS.onmessages>>" + JSON.stringify(messages));
+    		
+    		if (messages.length===1) {
+    			
+				console.log(JSON.stringify(messages[0]));
+				
+				if (messages[0].type === 'update') {
+					
+	    	    	//Try Reload
+					if (app.contextId) {
+						
+						app.load(app.contextId);
+						
+					}
+					
+	    	    	return;
+				}
+								
+				let figure = app.getView().getFigure(messages[0].type);
+				
+				if (figure!=null) {
+					
+					console.log("FIGURECOLOR: " + JSON.stringify(figure.hooksLabel.attr('bgColor')));
+					
+					const hooksColor = figure.hooksLabel.attr('bgColor');
+					
+					figure.hooksLabel.attr({ bgColor: getHexColorFromSessionId(messages[0].sessionId) });
+					
+					//app.getView().scrollTo(figure.getX(), figure.getY());
+					
+					//figure.setGlow(true);
+					
+	    	    	setTimeout(function() {
+	    	    		
+						//figure.setGlow(false);
+						
+						figure.hooksLabel.attr({ bgColor: hooksColor });
+						
+	    	    	}, 500);
+	    	    	
+	    	    	/*
+	    	    	debugToast(messages[0].sessionId + "\n" + messages[0].text, 
+	    	    			getHexColorFromSessionId(messages[0].sessionId), 
+	    	    			app.getView().getAbsoluteX() + figure.getX() - app.getView().getScrollLeft(), 
+	    	    			app.getView().getAbsoluteY() + figure.getY() - app.getView().getScrollTop(), 3000);		    	    	
+	    	    	*/
+    	    		
+				} else {
+					
+					//Skip From greeting
+    	    		//debugToast(JSON.stringify(messages) + " not found", "black", centerX, centerY, 3000);
+    	    		
+				}
+				
+    									
+    		}
+    			  	
+    		    		
+    	};	    	
+    	
+    	function showToast(text, x, y) {
+    		
+    	}
+    	
 	</script>
 	
 </body>
