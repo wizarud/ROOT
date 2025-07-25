@@ -17,8 +17,8 @@ import com.wayos.pusher.PusherUtil;
 import com.wayos.pusher.WebPusher;
 import com.wayos.storage.DirectoryStorage;
 import com.wayos.util.ConsoleUtil;
-import com.wayos.util.SilentPusher;
-import com.wayos.util.SilentPusherTask;
+import com.wayos.util.SilentFire;
+import com.wayos.util.SilentFireTask;
 
 import x.org.json.JSONObject;
 
@@ -100,35 +100,37 @@ public class AppListener implements ServletContextListener {
 		/**
 		 * Register SilentPusher
 		 */
-		SilentPusher silentPusher = new SilentPusher(storage);
-		Application.instance().register(SilentPusher.class.getName(), silentPusher);
+		SilentFire silentFire = new SilentFire(storage);
+		Application.instance().register(SilentFire.class.getName(), silentFire);
 
 		/**
 		 * Load pending task from saved file
 		 */
-		List<String> targetList = storage.listObjectsWithPrefix("silent");
+		List<String> accountIdList = storage.listObjectsWithPrefix("silent");
+		List<String> botIdList;
 		JSONObject cronObj;
-		String [] tokens;
-		for (String target:targetList) {
-			
-			cronObj = storage.readAsJSONObject("silent/" + target);
+		String botId;
+		String contextName;
+		for (String accountId:accountIdList) {
 
-			if (cronObj==null) continue;
+			botIdList = storage.listObjectsWithPrefix("silent/" + accountId);
 			
-			String cronExpression = cronObj.getString("interval");
-			tokens = target.split("\\.");
-			String accountId = tokens[0];
-			String botId = tokens[1];
-			String channel = tokens[2];
-			String sessionId = tokens[3];
-			String messageToFire = tokens[4];
-			
-			SilentPusherTask silentPusherTask = new SilentPusherTask(cronExpression, accountId + "/" + botId, channel, sessionId, messageToFire);
-			
-			ZonedDateTime next = silentPusher.register(silentPusherTask);
-			
-			System.out.println(target + " will execute at " + next);
+			for (String botJsonFile:botIdList) {
+				
+				System.out.println("silent/" + accountId + "/" + botJsonFile);
+				
+				cronObj = storage.readAsJSONObject("silent/" + accountId + "/" + botJsonFile);
 
+				if (cronObj==null) continue;
+				
+				botId = botJsonFile.replace(".json", "");
+				
+				contextName = accountId + "/" + botId;
+				
+				silentFire.register(SilentFireTask.build(contextName, cronObj));
+				
+			}			
+			
 		}		
 
 	}
@@ -139,10 +141,10 @@ public class AppListener implements ServletContextListener {
 		/**
 		 * Cancel all silent task
 		 */
-		SilentPusher silentPusher = (SilentPusher) Application.instance().get(SilentPusher.class.getName());
+		SilentFire silentFire = (SilentFire) Application.instance().get(SilentFire.class.getName());
 		
-		if (silentPusher!=null)
-			silentPusher.cancelAll();
+		if (silentFire!=null)
+			silentFire.cancelAll();
 		
 		/**
 		 * Delete running.json status file

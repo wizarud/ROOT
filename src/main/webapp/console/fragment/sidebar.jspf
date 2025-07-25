@@ -20,6 +20,12 @@
 					<p><fmt:message key="sidbar.pushservice" /></p>
 				</a>
 			</li>
+			<li class="silent">
+				<a href="silent.jsp"> 
+					<i class="pe-7s-timer"></i>
+					<p>Crons</p>
+				</a>
+			</li>
 			<%-- 
 			<li class="dashboard">
 				<a href="dashboard.jsp"> 

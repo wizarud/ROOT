@@ -79,8 +79,6 @@
 							
 					<% } %>
 						<%-- Rich Menus --%>
-	                    <li class="login"><a href="https://wayos.yiem.cc/th" style="cursor: pointer; width: 200px;">สอนเด็กโค้ดดิ้ง</a></li>
-	                    <li class="login"><a href="https://www.yiem.cc" style="cursor: pointer; width: 200px;">About Us</a></li>
 	                    <%--li class="login"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2UCVCYHA5WWF2" target="_blank" style="cursor: pointer; width: 200px; color: #00457C; font-weight: bold; background-color: #FF9C07">Donate</a></li--%>
 						
 					<% } %>
