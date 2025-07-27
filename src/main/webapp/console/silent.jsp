@@ -32,10 +32,7 @@
 										<label>Last Execute : </label>
 										<span class="col-md-8" style="display: inline-block;float: none;">
 											<input id="lastExecute" type="text" class="form-control" value="<fmt:message key="chatbox.loading" />" disabled>
-										</span><br>
-										<label>Last Response Text : </label>
-										<span class="col-md-8" style="display: inline-block;float: none;">
-											<input id="lastResponseText" type="text" class="form-control" value="<fmt:message key="chatbox.loading" />" disabled>
+											<textarea id="lastResponseText" class="form-control" disabled><fmt:message key="chatbox.loading" /></textarea>
 										</span><br>
 										<label>Next Execute : </label>
 										<span class="col-md-8" style="display: inline-block;float: none;">

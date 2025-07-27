@@ -1,6 +1,5 @@
 package listener;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -20,6 +19,7 @@ import com.wayos.util.ConsoleUtil;
 import com.wayos.util.SilentFire;
 import com.wayos.util.SilentFireTask;
 
+import x.org.json.JSONArray;
 import x.org.json.JSONObject;
 
 public class AppListener implements ServletContextListener {
@@ -51,10 +51,14 @@ public class AppListener implements ServletContextListener {
 		/**
 		 * Check this listener is already start or not?
 		 */
-		JSONObject startedObj = storage.readAsJSONObject("running.json");				
-		if (startedObj!=null) {		
+		JSONObject runningObj = storage.readAsJSONObject("running.json");
+		
+		if (runningObj!=null) {		
 
-			System.out.println("Listener already started.. " + startedObj.toString());
+			System.out.println("Listener already started.. " + runningObj.toString());
+			
+			stopDaemonProcess(runningObj);
+			
 			return;
 
 		}
@@ -65,9 +69,9 @@ public class AppListener implements ServletContextListener {
 		 * Not yet? let start!
 		 */
 
-		startedObj = new JSONObject();
-		startedObj.put("timestamp", new java.util.Date());
-		storage.write(startedObj.toString(), "running.json");
+		runningObj = new JSONObject();
+		runningObj.put("timestamp", new java.util.Date());
+		storage.write(runningObj.toString(), "running.json");
 
 		ConsoleUtil consoleUtil = new ConsoleUtil(storage);
 
@@ -136,26 +140,78 @@ public class AppListener implements ServletContextListener {
 	}
 	
 	@Override
-	public void contextDestroyed(ServletContextEvent sce) {
+	public void contextDestroyed(ServletContextEvent sce) {		
 
 		/**
 		 * Cancel all silent task
 		 */
-		SilentFire silentFire = (SilentFire) Application.instance().get(SilentFire.class.getName());
+		SilentFire silentFire = Application.instance().get(SilentFire.class);
 		
-		if (silentFire!=null)
+		if (silentFire!=null) {
+			
 			silentFire.cancelAll();
+			
+		}
 		
-		/**
-		 * Delete running.json status file
-		 */
-		PathStorage storage = (PathStorage) Application.instance().get(PathStorage.class.getName());
+		PathStorage storage = Application.instance().get(PathStorage.class);
 		
-		if (storage!=null)
+		if (storage!=null) {
+			
+			/**
+			 * List pending processes started by start command
+			 */
+			JSONObject runningObj = storage.readAsJSONObject("running.json");
+			
+			stopDaemonProcess(runningObj);
+			
+			/**
+			 * Delete running.json status file
+			 */		
 			storage.delete("running.json");
+			
+		}
 
 		System.out.println("Server Destroyed");
 		
+	}
+
+	private void stopDaemonProcess(JSONObject runningObj) {
+		
+		if (runningObj!=null) {
+			
+			JSONArray processIdArray = runningObj.optJSONArray("processIds");
+			
+			if (processIdArray!=null) {
+				
+				for (int i=0; i<processIdArray.length(); i++) {
+					
+					long pid = processIdArray.getLong(i);
+					
+					ProcessHandle handle = ProcessHandle.of(pid).orElse(null);				
+					
+					if (handle!=null && handle.isAlive()) {
+						
+						if (handle.destroy()) {
+							
+							System.out.println("Process " + pid + " has been released..");
+							
+						} else {
+							
+							System.out.println("Process " + pid + " cannot release..");
+							
+						}
+						
+					} else {
+						
+						System.out.println("Process " + pid + " not found..");
+						
+					}
+									
+				}
+				
+			}
+			
+		}
 	}
 
 }
