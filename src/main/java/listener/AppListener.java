@@ -8,7 +8,7 @@ import javax.servlet.ServletContextListener;
 
 import com.wayos.Application;
 import com.wayos.PathStorage;
-import com.wayos.command.langchain4j.Langchain4JSessionPoolFactory;
+import com.wayos.connector.ExtensionCommandSupportSessionPoolFactory;
 import com.wayos.connector.SessionPool;
 import com.wayos.pusher.FacebookPusher;
 import com.wayos.pusher.LinePusher;
@@ -82,7 +82,11 @@ public class AppListener implements ServletContextListener {
 		 * Use Langchain4J Instead
 		 */
 
-		Langchain4JSessionPoolFactory sessionPoolFactory = new Langchain4JSessionPoolFactory(storage, consoleUtil, pusherUtil);
+		ExtensionCommandSupportSessionPoolFactory sessionPoolFactory = new ExtensionCommandSupportSessionPoolFactory(
+				sce.getServletContext(), 
+				storage, 
+				consoleUtil, 
+				pusherUtil);
 
 		SessionPool sessionPool = sessionPoolFactory.create();
 
