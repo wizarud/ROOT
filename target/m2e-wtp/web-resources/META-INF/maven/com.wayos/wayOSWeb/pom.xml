@@ -29,14 +29,14 @@
 		<dependency>
 			<groupId>com.wayos</groupId>
 			<artifactId>runtime</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>2025.8.8</version>
 		</dependency>
 
 		<!-- Import langchain4j Plugin library -->
 		<dependency>
 			<groupId>com.wayos.command.langchain4j</groupId>
 			<artifactId>langchain4jPlugins</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>2025.8.8</version>
 		</dependency>
 
 	</dependencies>
