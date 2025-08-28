@@ -27,7 +27,7 @@ limz_CommandSetJSON = draw2d.command.Command.extend({
     },
     
     updateLabel: function(data) {
-    	
+		
     	const responseType = this.responseDef.figure.getResponseType();
     	
         if (this.data.parameterName==='url' /*|| this.data.parameterName==='path'*/) {

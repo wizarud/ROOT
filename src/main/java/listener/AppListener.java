@@ -1,6 +1,10 @@
 package listener;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import javax.servlet.ServletContextEvent;
@@ -26,8 +30,14 @@ public class AppListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-
+		
 		boolean isRoot = sce.getServletContext().getContextPath().isEmpty();
+		
+		/**
+		 * Check is deploy on PI or not?
+		 * Retrieve PI Machine Id from /proc/cpuinfo
+		 */
+		String piMachineId = piMachineId();
 
 		String storagePath;
 
@@ -35,6 +45,17 @@ public class AppListener implements ServletContextListener {
 
 			storagePath = System.getenv("storagePath") + sce.getServletContext().getContextPath();
 
+		}
+		
+		else if (piMachineId!=null) {
+			
+			/**
+			 * TODO: Check allowed piMachineId
+			 * Ex. From Support list on Updater.war
+			 */
+						
+			storagePath = System.getenv("storagePath") + "/" + piMachineId;			
+		
 		} else {
 
 			storagePath = System.getenv("storagePath") + "/ROOT";
@@ -116,7 +137,7 @@ public class AppListener implements ServletContextListener {
 		 */
 		List<String> accountIdList = storage.listObjectsWithPrefix("silent");
 		List<String> botIdList;
-		JSONObject cronObj;
+		JSONObject taskObj;
 		String botId;
 		String contextName;
 		for (String accountId:accountIdList) {
@@ -127,20 +148,20 @@ public class AppListener implements ServletContextListener {
 				
 				System.out.println("silent/" + accountId + "/" + botJsonFile);
 				
-				cronObj = storage.readAsJSONObject("silent/" + accountId + "/" + botJsonFile);
+				taskObj = storage.readAsJSONObject("silent/" + accountId + "/" + botJsonFile);
 
-				if (cronObj==null) continue;
+				if (taskObj==null) continue;
 				
 				botId = botJsonFile.replace(".json", "");
 				
 				contextName = accountId + "/" + botId;
 				
-				silentFire.register(SilentFireTask.build(contextName, cronObj));
+				silentFire.register(SilentFireTask.build(contextName, taskObj));
 				
 			}			
 			
 		}		
-
+		
 	}
 	
 	@Override
@@ -216,6 +237,30 @@ public class AppListener implements ServletContextListener {
 			}
 			
 		}
+	}
+	
+	private String piMachineId() {
+		
+		//Read Pi serial
+        String serial;
+        try (BufferedReader br = new BufferedReader(new FileReader("/proc/cpuinfo"))) {
+        	
+            String line; serial = null;
+            
+            while ((line = br.readLine()) != null) {
+            	
+                if (line.startsWith("Serial")) { serial = line.split(":")[1].trim(); break; }
+                
+            }
+            
+            return serial;
+            
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+        
+        return null;
+				
 	}
 
 }

@@ -867,5 +867,24 @@ limz_Application = Class.extend(
 
 	            return responses;
 	        },
+			
+			registerToolColor: function (id, color) {
+				
+				if (!this.toolColor) {
+					this.toolColor = {};
+				}
+				
+				this.toolColor[id] = color;
+			},
+			
+			getToolColor: function (id) {
+				
+				if (!this.toolColor) {
+					this.toolColor = {};
+				}
+				
+				return this.toolColor[id];
+			}
 
-	    });
+	    }
+	);

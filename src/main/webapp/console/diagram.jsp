@@ -1,4 +1,4 @@
-<%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html" pageEncoding="UTF-8" import="java.util.Map, org.apache.commons.text.StringEscapeUtils" %>
 <!DOCTYPE html>
 <head>
 <meta charset="utf-8">
@@ -141,6 +141,31 @@
 					class="palette_node_element draw2d_droppable"
 					style="background-color: #D0021B"
 					title="drag&amp;drop the Question into the canvas..">Quest</div>
+				<%
+					/**
+					* For External Tools
+					* figure.addResponse("CMD", true, [{ parameterName: 'hook', value: '' }, { parameterName: 'params', value: '' }]);
+					*/
+					Map<String, Map<String, String>> logicDesignerExtToolMap = (Map) application.getAttribute("logicDesignerExtToolMap");
+					
+					System.out.println(logicDesignerExtToolMap);
+					
+					if (logicDesignerExtToolMap!=null) {
+						for (Map.Entry<String, Map<String, String>> entry:logicDesignerExtToolMap.entrySet()) {
+				%>
+				
+					<div id="<%= entry.getKey() %>" 
+						data-shape="limz_EntityShape"
+						data-color="<%= entry.getValue().get("tool-color") %>"
+						data-resps="<%= entry.getValue().get("entity-resps") %>"
+						class="palette_node_element draw2d_droppable"
+						style="background-color: <%= entry.getValue().get("tool-color") %>"
+						title="<%= entry.getValue().get("tool-tip") %>"><%= entry.getValue().get("tool-label") %></div>
+				
+				<%			
+						}
+					}
+				%>
 			</div>
 			<div id="view">
 				<div id="canvas"
@@ -172,10 +197,28 @@
         var app = null;
         
 		$(document).ready(function() {
+			
 			draw2d.Configuration.factory.createOutputPort = function(relatedFigure) {
 		        return new limz_OutputPort();
    			};
 		    app  = new limz_Application();		    
+		    
+		    /**
+		    * TODO: Generate Ext command entity Map
+		    */
+		    const elements = document.querySelectorAll('[id^="extCommand"]');
+
+		    elements.forEach(el => {
+		    	
+		    	let id = el.id.replace("extCommand-", "");
+		    	let color = el.dataset.color;
+		    	
+		    	console.log(id + "=>" + color);
+		    	
+		    	app.registerToolColor(id, color);
+		    	
+		    });
+		    
 		});
 		
 		window.onbeforeunload = function(e) {

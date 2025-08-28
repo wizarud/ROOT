@@ -2,17 +2,6 @@
 
 <%
 
-/**
-* Redirect to sale page in production
-*/
-
-if (Configuration.domain.equals("https://wayos.yiem.ai")) {
-	
-	response.sendRedirect("https://wayos.yiem.ai/th");
-	
-	return;
-}
-
 String accountId = System.getenv("showcaseAccountId");
 
 String botId = System.getenv("showcaseBotId");

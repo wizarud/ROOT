@@ -63,7 +63,70 @@ limz_View = draw2d.Canvas.extend({
         if (figure instanceof limz_EntityShape) {
         	
             figure.setHooks("Keywords");
-            figure.addResponse("Answer", false);        	
+						
+			let resps = $(droppedDomNode).data("resps");
+			
+			if (resps!=null) {
+				
+				//console.log(resps);
+				
+				let respArray = eval(resps);
+				
+				for (let i in respArray) {
+					
+					let respObj = respArray[i];
+					
+					let responseLabel = figure.addResponse(respObj.txt, true, respObj.params);
+					
+					/**
+					 * TODO: Update Txt label, CommandSetJSON.updateLabel
+					 * Ex: CMD call
+					 */
+					//console.log("DROP TOOL.." + JSON.stringify(respObj.params));
+					
+					let responseType = respObj.txt; //responseLabel.getResponseType();
+					let data = respObj.params[0]; //Check Only from First Parameter
+
+					if (data.parameterName==='url' /*|| this.data.parameterName==='path'*/) {
+						
+					    responseLabel.setText(responseType + " " + data.value);
+					    
+					} else if (data.parameterName==='name' || data.parameterName==='value') {
+						
+						let name =  responseLabel.getUserData()[0].value;
+						let value =  responseLabel.getUserData()[1].value;
+						
+					    responseLabel.setText(responseType + " " + name + " to " + value);
+					    
+					} else if (
+						data.parameterName==='object' || 
+						data.parameterName==='dom' || 
+						data.parameterName==='path' || 
+						data.parameterName==='hook' || 
+						data.parameterName==='params') {
+						
+						let v1 =  responseLabel.getUserData()[0].value;
+						let v2 =  responseLabel.getUserData()[1].value;
+						
+					    responseLabel.setText(responseType + " " + v1 + " " + v2);
+						
+						let color = app.getToolColor(v1);
+						
+						if (color) {
+							figure.setHooksLabelBackgroundColor(color);
+						}
+						
+					}					
+				}
+				
+				
+				
+			} else {
+				
+				figure.addResponse("Answer", false);        	
+				
+			}
+						
             // create a command for the undo/redo support
             var command = new draw2d.command.CommandAdd(this, figure, x, y);
             this.getCommandStack().execute(command);
@@ -77,7 +140,7 @@ limz_View = draw2d.Canvas.extend({
             this.getCommandStack().execute(command);
             
             return;
-        }
+        }		
         
     },
     

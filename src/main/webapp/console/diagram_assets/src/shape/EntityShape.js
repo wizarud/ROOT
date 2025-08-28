@@ -59,7 +59,14 @@ limz_EntityShape = draw2d.shape.layout.VerticalLayout.extend({
     getHooks: function () {
         return this.hooksLabel.getText();
     },
+	
+	setHooksLabelBackgroundColor: function (color) {
+		this.hooksLabel.setBackgroundColor (color);
+	},
 
+	/**
+	 * On Save..
+	 */
     getPersistentAttributes: function () {
         var memento = this._super();
 
@@ -121,6 +128,9 @@ limz_EntityShape = draw2d.shape.layout.VerticalLayout.extend({
         return memento;
     },
 
+	/**
+	 * On loaded
+	 */
     setPersistentAttributes: function (memento) {
         this._super(memento);
 
@@ -129,17 +139,40 @@ limz_EntityShape = draw2d.shape.layout.VerticalLayout.extend({
         if (memento.weights) {
             this.hooksLabel.setUserData(memento.weights.slice());
         }
+		
+		/**
+		 * TODO: set Key Color if label match tool in leftbar
+		 */
+		
 
         var pos = 0;
         if (typeof memento.responses !== "undefined") {
             $.each(memento.responses, $.proxy(function (i, response) {
 				
 				//console.log(response.type + ":" + response.text);
-				
+								
                 var label;
                 label = new limz_ResponseLabel(this, response.type, response.text, pos !== 0, response.parameters);
                 this.add(label);
                 pos ++;
+				
+				/**
+				 * Apply Tool Color
+				 */
+				console.log("Unmashalling.." + JSON.stringify(label.getUserData()));
+				
+				if (label.getUserData()!==null && label.getUserData()[0].parameterName==='hook') {
+					
+					let v1 =  label.getUserData()[0].value;
+
+					let color = app.getToolColor(v1);
+
+					if (color) {
+						this.setHooksLabelBackgroundColor(color);
+					}
+					
+				}
+				
             }, this));
         }
         
