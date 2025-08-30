@@ -2,13 +2,12 @@ package listener;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 
 import com.wayos.Application;
 import com.wayos.PathStorage;
@@ -20,12 +19,13 @@ import com.wayos.pusher.PusherUtil;
 import com.wayos.pusher.WebPusher;
 import com.wayos.storage.DirectoryStorage;
 import com.wayos.util.ConsoleUtil;
-import com.wayos.util.SilentFire;
-import com.wayos.util.SilentFireTask;
+import com.wayos.util.MessageTimer;
+import com.wayos.util.MessageTimerTask;
 
 import x.org.json.JSONArray;
 import x.org.json.JSONObject;
 
+@WebListener
 public class AppListener implements ServletContextListener {
 
 	@Override
@@ -129,8 +129,8 @@ public class AppListener implements ServletContextListener {
 		/**
 		 * Register SilentPusher
 		 */
-		SilentFire silentFire = new SilentFire(storage);
-		Application.instance().register(SilentFire.class.getName(), silentFire);
+		MessageTimer silentFire = new MessageTimer(storage);
+		Application.instance().register(MessageTimer.class.getName(), silentFire);
 
 		/**
 		 * Load pending task from saved file
@@ -156,7 +156,7 @@ public class AppListener implements ServletContextListener {
 				
 				contextName = accountId + "/" + botId;
 				
-				silentFire.register(SilentFireTask.build(contextName, taskObj));
+				silentFire.register(MessageTimerTask.build(contextName, taskObj));
 				
 			}			
 			
@@ -170,7 +170,7 @@ public class AppListener implements ServletContextListener {
 		/**
 		 * Cancel all silent task
 		 */
-		SilentFire silentFire = Application.instance().get(SilentFire.class);
+		MessageTimer silentFire = Application.instance().get(MessageTimer.class);
 		
 		if (silentFire!=null) {
 			

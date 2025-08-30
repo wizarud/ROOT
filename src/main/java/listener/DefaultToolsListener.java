@@ -7,7 +7,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.annotation.WebListener;
 
 import com.wayos.Session;
-import com.wayos.Hook.Match;
 import com.wayos.command.TaskUpdateCommandNode;
 import com.wayos.command.wakeup.ExtensionSupportWakeupCommandNode;
 
@@ -17,7 +16,7 @@ public class DefaultToolsListener extends ExtensionSupportWakeupCommandNode.WebL
 	@Override
 	public void wakup(Session session) {
 		
-        session.commandList().add(new TaskUpdateCommandNode(session, new String[]{"task"}, Match.Head));
+        session.commandList().add(new TaskUpdateCommandNode(session, new String[]{"taskCMD"}));
 		
 		System.out.println(session + " Default Commands ready..");
 		
@@ -42,7 +41,7 @@ public class DefaultToolsListener extends ExtensionSupportWakeupCommandNode.WebL
 		sampleEntity1Map.put("entity-resps", "["
 				+ "{"
 				+ "	txt: 'CMD',"
-				+ "	params: [{ parameterName: 'hook', value: 'task' }, { parameterName: 'params', value: 'HH:mm keyToFire' }]"
+				+ "	params: [{ parameterName: 'hook', value: 'taskCMD' }, { parameterName: 'params', value: 'HH:mm keyToFire' }]"
 				+ "}"
 				+ "]");
 		
@@ -50,7 +49,7 @@ public class DefaultToolsListener extends ExtensionSupportWakeupCommandNode.WebL
 		 * DOM Id query pattern to apply colour
 		 * extCommand-<Hook>
 		 */
-		logicDesignerExtToolMap.put("extCommand-task", sampleEntity1Map);
+		logicDesignerExtToolMap.put("extCommand-taskCMD", sampleEntity1Map);
 		
 		System.out.println("Loaded Sample Tools: " + sce.getServletContext().getAttribute("logicDesignerExtToolMap"));		
 		

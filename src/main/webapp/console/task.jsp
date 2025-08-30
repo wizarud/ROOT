@@ -17,15 +17,19 @@
                 <div class="row">
                     <div class="col-md-8">
                         <div class="card generateMinHeight">
-							<div id="service-content" class="content">							
+							<div id="service-content" class="content">
 								<div id="Test-Connection-content">
 									<span class="form-group">
 										<p id="errorMessage" style="color: red; display: none"><fmt:message key="chatbox.err" /></p>
+										<label>To Session Id : </label>
+										<span class="col-md-8" style="display: inline-block;float: none;">
+											<input id="sessionId" type="text" class="form-control" value="<fmt:message key="chatbox.loading" />">
+										</span><br>
 										<label>Message : </label>
 										<span class="col-md-8" style="display: inline-block;float: none;">
 											<input id="message" type="text" class="form-control" value="<fmt:message key="chatbox.loading" />">
-										</span><br>									
-										<label>Interval : </label>
+										</span><br>
+										<label>Time [Hours Interval|HH:mm|Cron Expression] : </label>
 										<span class="col-md-8" style="display: inline-block;float: none;">
 											<input id="interval" type="text" class="form-control" value="<fmt:message key="chatbox.loading" />">
 										</span><br>
@@ -61,10 +65,10 @@
 <%@ include file="fragment/env-js.jspf" %>
 <script src='js/lib/spectrum.js'></script>
 <link rel='stylesheet' href='css/spectrum.css' />
-<script src="js/silent.js"></script> 
+<script src="js/task.js"></script> 
 <script type="text/javascript">
 function onBotListLoaded() {
-	getSilent();
+	getTask();
 }
 </script>
 </html>

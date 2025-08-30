@@ -3,10 +3,10 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-	<display-name>Archetype Created Web Application</display-name>
-	<listener>
-		<listener-class>listener.AppListener</listener-class>
-	</listener>
+	<display-name>wayOS Play UI</display-name>
+<!-- 	<listener> -->
+<!-- 		<listener-class>listener.AppListener</listener-class> -->
+<!-- 	</listener> -->
 	<servlet>
 		<servlet-name>VesionCheckerServlet</servlet-name>
 		<display-name>VesionCheckerServlet</display-name>

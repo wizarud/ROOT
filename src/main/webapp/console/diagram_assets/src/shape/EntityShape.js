@@ -181,6 +181,35 @@ limz_EntityShape = draw2d.shape.layout.VerticalLayout.extend({
         
         return this;
     },
+	
+	applyToolColorIfMatched: function() {
+		
+		let figure = this;
+		
+		this.children.each(function (i, e) {
+
+			// skip the header of the figure
+		    if (i > 0 && e.figure instanceof limz_ResponseLabel) {
+				
+				let label = e.figure;
+				
+				if (label.getUserData()!==null && label.getUserData()[0].parameterName==='hook') {
+					
+					let v1 =  label.getUserData()[0].value;
+
+					let color = app.getToolColor(v1);
+
+					if (color) {
+						figure.setHooksLabelBackgroundColor(color);
+					}
+					
+				}
+								
+		    }
+			
+		});
+
+	},
     
     getTextWeights: function() {
 

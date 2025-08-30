@@ -1,8 +1,8 @@
-function getSilent() {
+function getTask() {
 	
 	overlayPopup("loader");
 	
-	let url = contextRoot + "/console/silent/" + contextName(botId);
+	let url = contextRoot + "/console/task/" + contextName(botId);
 	let xhr = new XMLHttpRequest();
 	xhr.open("GET", url, true);
 	xhr.onload = function() {
@@ -10,6 +10,7 @@ function getSilent() {
 		if (xhr.status == 200) {
 			
 			let obj = JSON.parse(xhr.responseText);
+			$("#sessionId").val(obj.sessionId);
 			$("#message").val(obj.message);
 			$("#interval").val(obj.interval);
 			$("#lastExecute").val(obj.lastExecute);
@@ -35,8 +36,8 @@ $("#update").click(function () {
 		
 		$("#errorMessage").hide();
 		
-		let url = contextRoot + "/console/silent/" + contextName(botId);
- 		let params = "message=" + encodeURIComponent($("#message").val()) + "&interval=" + encodeURIComponent($("#interval").val());
+		let url = contextRoot + "/console/task/" + contextName(botId);
+ 		let params = "sessionId=" + encodeURIComponent($("#sessionId").val()) + "&message=" + encodeURIComponent($("#message").val()) + "&interval=" + encodeURIComponent($("#interval").val());
  
  		let xhr = new XMLHttpRequest();
  		xhr.open("POST", url, true);
@@ -75,7 +76,7 @@ $("#delete").click(function () {
 		
 	$("#errorMessage").hide();
 		
-	let url = contextRoot + "/console/silent/" + contextName(botId);
+	let url = contextRoot + "/console/task/" + contextName(botId);
 
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);

@@ -51,7 +51,14 @@ limz_CommandSetJSON = draw2d.command.Command.extend({
         	const v1 =  this.responseDef.figure.getUserData()[0].value;
         	const v2 =  this.responseDef.figure.getUserData()[1].value;
         	
-            this.responseDef.figure.setText(responseType + " " + v1 + " " + v2);			
+            this.responseDef.figure.setText(responseType + " " + v1 + " " + v2);	
+			
+			let color = app.getToolColor(v1);
+
+			if (color) {
+				this.figure.setHooksLabelBackgroundColor(color);
+			}
+
 			
 		}
     	
