@@ -7,7 +7,12 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.annotation.WebListener;
 
 import com.wayos.Session;
+import com.wayos.command.AsyncCommandNode;
+import com.wayos.command.AsyncCommandRunner;
+import com.wayos.command.StartProcessCommandNode;
+import com.wayos.command.StopProcessCommandNode;
 import com.wayos.command.TaskUpdateCommandNode;
+import com.wayos.command.WaitCommandNode;
 import com.wayos.command.wakeup.ExtensionSupportWakeupCommandNode;
 
 @WebListener
@@ -17,7 +22,15 @@ public class DefaultToolsListener extends ExtensionSupportWakeupCommandNode.WebL
 	public void wakup(Session session) {
 		
         session.commandList().add(new TaskUpdateCommandNode(session, new String[]{"taskCMD"}));
-		
+        
+        session.commandList().add(new StartProcessCommandNode(session, new String[]{"start"}));
+        
+        session.commandList().add(new WaitCommandNode(session, new String[]{"wait"}));
+        
+        session.commandList().add(new StopProcessCommandNode(session, new String[]{"stop"}));
+        
+		session.commandList().add(new AsyncCommandNode(session, new String[]{"await"}, new AsyncCommandRunner(new WaitCommandNode(session, null))));        
+        		
 		System.out.println(session + " Default Commands ready..");
 		
 	}
