@@ -25,11 +25,11 @@ public class DefaultToolsListener extends ExtensionSupportWakeupCommandNode.WebL
         
         session.commandList().add(new StartProcessCommandNode(session, new String[]{"start"}));
         
-        session.commandList().add(new WaitCommandNode(session, new String[]{"wait"}));
-        
         session.commandList().add(new StopProcessCommandNode(session, new String[]{"stop"}));
         
-		session.commandList().add(new AsyncCommandNode(session, new String[]{"await"}, new AsyncCommandRunner(new WaitCommandNode(session, null))));        
+        session.commandList().add(new WaitCommandNode(session, new String[]{"wait"}));        
+        
+		session.commandList().add(new AsyncCommandNode(session, new String[]{"awaitCMD"}, new AsyncCommandRunner(new WaitCommandNode(session, null))));
         		
 		System.out.println(session + " Default Commands ready..");
 		
@@ -58,11 +58,23 @@ public class DefaultToolsListener extends ExtensionSupportWakeupCommandNode.WebL
 				+ "}"
 				+ "]");
 		
+		Map<String, String> sampleEntity2Map = new HashMap<>();
+		sampleEntity2Map.put("tool-label", "aWait");
+		sampleEntity2Map.put("tool-color", "#D7C3F1");
+		sampleEntity2Map.put("tool-tip", "Asynchronous Wait in millisecond!");
+		sampleEntity2Map.put("entity-resps", "["
+				+ "{"
+				+ "	txt: 'CMD',"
+				+ "	params: [{ parameterName: 'hook', value: 'awaitCMD' }, { parameterName: 'params', value: '1000' }]"
+				+ "}"
+				+ "]");
+		
 		/**
 		 * DOM Id query pattern to apply colour
 		 * extCommand-<Hook>
 		 */
 		logicDesignerExtToolMap.put("extCommand-taskCMD", sampleEntity1Map);
+		logicDesignerExtToolMap.put("extCommand-awaitCMD", sampleEntity2Map);
 		
 		System.out.println("Loaded Sample Tools: " + sce.getServletContext().getAttribute("logicDesignerExtToolMap"));		
 		

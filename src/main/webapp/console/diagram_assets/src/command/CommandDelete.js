@@ -115,6 +115,12 @@ limz_CommandDelete = draw2d.command.Command.extend({
 			if (parent.NAME === "limz_EntityShape") {
 				parent.isQuestion = undefined;
 				parent.hooksLabel.attr({ bgColor: "#4286F4" });              				
+				
+				/**
+				 * Update Tool Color if matched
+				 */
+				parent.applyToolColorIfMatched();
+				
 			}
            }
        }
@@ -139,6 +145,11 @@ limz_CommandDelete = draw2d.command.Command.extend({
 				if (parent.NAME === "limz_EntityShape") {
 					parent.isQuestion = undefined;
 					parent.hooksLabel.attr({ bgColor: "#4286F4" });
+					
+					/**
+					 * Update Tool Color if matched
+					 */
+					parent.applyToolColorIfMatched();
 				}
             }
         }

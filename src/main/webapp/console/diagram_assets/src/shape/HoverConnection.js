@@ -56,12 +56,12 @@ var limz_HoverConnection = draw2d.Connection.extend({
             if (decorator==null) {
             	
                 this.getSource().getParent().hooksLabel.attr({ bgColor: "#4286F4" });
-				
+				                
 				/**
 				 * Update Tool Color if matched
 				 */
 				this.getSource().getParent().applyToolColorIfMatched();
-                
+				
             } else {
             	
             	this.getSource().getParent().hooksLabel.attr({ bgColor: "#D0021B" });
