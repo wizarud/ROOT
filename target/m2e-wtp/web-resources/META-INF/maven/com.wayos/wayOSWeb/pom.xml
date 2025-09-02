@@ -6,7 +6,7 @@
 	<groupId>com.wayos</groupId>
 	<artifactId>wayOSWeb</artifactId>
 	<packaging>war</packaging>
-	<version>2025.9.2.3</version>
+	<version>2025.9.2.4</version>
 	<name>wayOSWeb Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 	
@@ -56,13 +56,26 @@
 	</dependencies>
 
 	<build>
+	
 		<finalName>ROOT</finalName>
-		<resources>
-    		<resource>
-      			<directory>src/main/resources</directory>
-		      <filtering>true</filtering>
-		    </resource>
-  		</resources>		
-	</build>
+		
+    	<plugins>
+        	<plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-war-plugin</artifactId>
+            	<version>3.4.0</version>
+	        </plugin>
+
+        	<plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-compiler-plugin</artifactId>
+    	        <version>3.11.0</version>
+        	    <configuration>
+            	    <release>21</release>
+	            </configuration>
+    	    </plugin>
+    </plugins>
+</build>
+
 
 </project>
