@@ -69,6 +69,7 @@ limz_View = draw2d.Canvas.extend({
 			if (resps!=null) {
 				
 				//console.log(resps);
+				figure.addResponse("", false);        	
 				
 				let respArray = eval(resps);
 				
