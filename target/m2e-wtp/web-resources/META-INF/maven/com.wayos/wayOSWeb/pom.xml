@@ -6,10 +6,10 @@
 	<groupId>com.wayos</groupId>
 	<artifactId>wayOSWeb</artifactId>
 	<packaging>war</packaging>
-	<version>2025.9.2.5</version>
+	<version>2025.9.2.6</version>
 	<name>wayOSWeb Maven Webapp</name>
 	<url>http://maven.apache.org</url>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>21</java.version>
@@ -31,30 +31,30 @@
 			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
-    		<groupId>org.apache.taglibs</groupId>
-		    <artifactId>taglibs-standard-spec</artifactId>
-    		<version>1.2.5</version>
+			<groupId>org.apache.taglibs</groupId>
+			<artifactId>taglibs-standard-spec</artifactId>
+			<version>1.2.5</version>
 		</dependency>
 
 		<dependency>
-		    <groupId>org.apache.taglibs</groupId>
-    		<artifactId>taglibs-standard-impl</artifactId>
-		    <version>1.2.5</version>
-		</dependency>	
-		
-		<dependency>
-		    <groupId>org.apache.taglibs</groupId>
-    		<artifactId>taglibs-standard-jstlel</artifactId>
-    		<version>1.2.5</version>
+			<groupId>org.apache.taglibs</groupId>
+			<artifactId>taglibs-standard-impl</artifactId>
+			<version>1.2.5</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>org.apache.taglibs</groupId>
-    		<artifactId>taglibs-standard-compat</artifactId>
-		    <version>1.2.5</version>
-		</dependency>		
+			<groupId>org.apache.taglibs</groupId>
+			<artifactId>taglibs-standard-jstlel</artifactId>
+			<version>1.2.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.taglibs</groupId>
+			<artifactId>taglibs-standard-compat</artifactId>
+			<version>1.2.5</version>
+		</dependency>
 
 		<!-- Import wayOS Runtime library -->
 		<dependency>
@@ -75,31 +75,43 @@
 			<groupId>com.wayos.command.pi4j</groupId>
 			<artifactId>pi4jPlugins</artifactId>
 			<version>2025.9.2.2</version>
-		</dependency>		
+		</dependency>
 
 	</dependencies>
 
 	<build>
-	
-		<finalName>ROOT</finalName>
-		
-    	<plugins>
-        	<plugin>
-            	<groupId>org.apache.maven.plugins</groupId>
-            	<artifactId>maven-war-plugin</artifactId>
-            	<version>3.4.0</version>
-	        </plugin>
 
-        	<plugin>
-            	<groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-compiler-plugin</artifactId>
-    	        <version>3.11.0</version>
-        	    <configuration>
-            	    <release>21</release>
-	            </configuration>
-    	    </plugin>
-    </plugins>
-</build>
+		<finalName>ROOT</finalName>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.4.0</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.11.0</version>
+				<configuration>
+					<release>21</release>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 
 </project>
