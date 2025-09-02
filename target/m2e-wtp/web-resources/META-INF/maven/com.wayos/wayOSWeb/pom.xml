@@ -6,7 +6,7 @@
 	<groupId>com.wayos</groupId>
 	<artifactId>wayOSWeb</artifactId>
 	<packaging>war</packaging>
-	<version>2025.9.2.1</version>
+	<version>2025.9.2.2</version>
 	<name>wayOSWeb Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 	
@@ -36,21 +36,21 @@
 		<dependency>
 			<groupId>com.wayos</groupId>
 			<artifactId>runtime</artifactId>
-			<version>2025.9.2.1</version>
+			<version>2025.9.2.2</version>
 		</dependency>
 
 		<!-- Import langchain4j Plugin library -->
 		<dependency>
 			<groupId>com.wayos.command.langchain4j</groupId>
 			<artifactId>langchain4jPlugins</artifactId>
-			<version>2025.9.2.1</version>
+			<version>2025.9.2.2</version>
 		</dependency>
-		
+
 		<!-- Import pi4j Plugin library -->
 		<dependency>
 			<groupId>com.wayos.command.pi4j</groupId>
 			<artifactId>pi4jPlugins</artifactId>
-			<version>2025.9.2.1</version>
+			<version>2025.9.2.2</version>
 		</dependency>		
 
 	</dependencies>
