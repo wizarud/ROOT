@@ -6,13 +6,13 @@
 	<groupId>com.wayos</groupId>
 	<artifactId>wayOSWeb</artifactId>
 	<packaging>war</packaging>
-	<version>2025.9.2.2</version>
+	<version>2025.9.2.3</version>
 	<name>wayOSWeb Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>17</java.version>
+		<java.version>21</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 	</properties>
