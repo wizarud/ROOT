@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-                                
+                                    
+    
     
     
     
@@ -7,7 +8,8 @@
     
     
     <wb-module deploy-name="ROOT">
-                                                                
+                                                                        
+        
         
         
         
@@ -15,7 +17,8 @@
         
         
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
-                                                                
+                                                                        
+        
         
         
         
@@ -23,7 +26,8 @@
         
         
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-                                                                
+                                                                        
+        
         
         
         
@@ -31,7 +35,8 @@
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-                                                                
+                                                                        
+        
         
         
         
@@ -39,16 +44,17 @@
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="runtime-2025.9.2.2.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wayOS/wayOS">
+        <dependent-module archiveName="runtime-2025.9.2.7.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wayOS/wayOS">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="langchain4jPlugins-2025.9.2.2.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/langchain4jPlugins/langchain4jPlugins">
+        <dependent-module archiveName="langchain4jPlugins-2025.9.2.7.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/langchain4jPlugins/langchain4jPlugins">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="pi4jPlugins-2025.9.2.2.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pi4jPlugins/pi4jPlugins">
+        <dependent-module archiveName="pi4jPlugins-2025.9.2.7.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pi4jPlugins/pi4jPlugins">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-                                                                
+                                                                        
+        
         
         
         
@@ -56,14 +62,16 @@
         
         
         <property name="java-output-path" value="/ROOT/target/classes"/>
-                                                        
+                                                                
+        
         
         
         
         
         
         <property name="context-root" value="ROOT"/>
-                                                            
+                                                                    
+    
     
     
     
@@ -71,7 +79,8 @@
     
     
     </wb-module>
-                            
+                                
+
 
 
 
