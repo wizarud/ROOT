@@ -20,15 +20,16 @@ public class DefaultToolsListener extends ExtensionSupportWakeupCommandNode.WebL
 
 	@Override
 	public void wakup(Session session) {
-		
+		        
+        session.commandList().add(new StartProcessCommandNode(session, new String[]{"startCMD"}));
+        
+        session.commandList().add(new StopProcessCommandNode(session, new String[]{"stopCMD"}));
+        
         session.commandList().add(new TaskUpdateCommandNode(session, new String[]{"taskCMD"}));
         
-        session.commandList().add(new StartProcessCommandNode(session, new String[]{"start"}));
+        session.commandList().add(new WaitCommandNode(session, new String[]{"waitCMD"}));
         
-        session.commandList().add(new StopProcessCommandNode(session, new String[]{"stop"}));
-        
-        session.commandList().add(new WaitCommandNode(session, new String[]{"wait"}));        
-        
+        //Blocking from continuous flow
 		session.commandList().add(new AsyncCommandNode(session, new String[]{"awaitCMD"}, new AsyncCommandRunner(new WaitCommandNode(session, null))));
         		
 		System.out.println(session + " Default Commands ready..");

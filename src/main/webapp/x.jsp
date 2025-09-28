@@ -19,11 +19,11 @@
 	
 	/* Use sessionId Parameter Instead
 	String sessionId = (String) request.getAttribute("sessionId");
+	*/
+	String sessionId = request.getParameter("sessionId");	
 	if (sessionId==null || sessionId.trim().isEmpty()) {
 		sessionId = "";
 	}
-	*/
-	String sessionId = request.getParameter("sessionId");	
 		
 	JSONObject properties = (JSONObject) request.getAttribute("props");
 		

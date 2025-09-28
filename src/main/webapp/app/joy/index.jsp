@@ -8,11 +8,11 @@
 	
 	/* Use sessionId parameter instead
 	String sessionId = (String) request.getAttribute("sessionId");
+	*/
+	String sessionId = request.getParameter("sessionId");	
 	if (sessionId==null || sessionId.trim().isEmpty()) {
 		sessionId = "";
 	}
-	*/
-	String sessionId = request.getParameter("sessionId");	
 	
 	JSONObject properties = (JSONObject) request.getAttribute("props");
 		
@@ -447,6 +447,8 @@
 
         //Callback Event
         thisWayOS.onmessages = function(messages) {
+        	
+        	console.log(JSON.stringify(messages));
         	
         };
         
