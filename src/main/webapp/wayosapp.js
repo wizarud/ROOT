@@ -135,6 +135,8 @@ class WayOS {
  			
  		    if (xhr.status === 200) {
  		    	
+ 		 		console.log("To onmessage .." + xhr.responseText); 		    	
+ 		    	
  		    	this.onmessages(JSON.parse(xhr.responseText));
  		    	
  		    }
@@ -142,6 +144,7 @@ class WayOS {
  		}.bind(this);
  		
  		xhr.send(params);
+ 		
 	}
 	
 	dropFile(file, message) {
@@ -361,7 +364,7 @@ class FrameUX {
 	
 	reload () {
 		
-		console.log("Frame reload...");
+		console.log("Frame reload..." + this.frame.src);
 		
 		this.frame.contentDocument.head.innerHTML = "";
 		this.frame.contentDocument.body.innerHTML = "";
@@ -537,6 +540,10 @@ class FrameUX {
 	verticalPosition () {
 				
 		return document.body.style.backgroundImage ? "vertical-bottom" : "vertical-center";
+	}
+	
+	isWidget() {
+		return this.frame.src !== "";
 	}
 	
 	locateTo (url) {
@@ -1833,15 +1840,20 @@ class Wayoslet extends HTMLElement {
 			if (!parentElement.dataset.chat || parentElement.dataset.chat === 'no') {
 				parentElement.chatBar.hide();
 			}
+			
 		};
 		
 		wayOS.onmessages = function(messages) {
-	
+			
 			//Clear Content
 			//if (parentElement.frameUX.content)
 				//parentElement.frameUX.content.innerHTML = "";
 			
 			parentElement.removeLoader();
+			
+			//TODO: Reload only src is not blank to switch from widget to blank frame src					
+			if (parentElement.frameUX.isWidget())
+				parentElement.frameUX.reload();
 						
 			parentElement.frameUX.play(messages);
 				
