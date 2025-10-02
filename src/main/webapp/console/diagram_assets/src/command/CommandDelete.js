@@ -142,8 +142,8 @@ limz_CommandDelete = draw2d.command.Command.extend({
             if (this.figure.getSource().getConnections().getSize()==0) {
 				
 				let parent = this.figure.getSource().getParent();
+				parent.isQuestion = undefined;
 				if (parent.NAME === "limz_EntityShape") {
-					parent.isQuestion = undefined;
 					parent.hooksLabel.attr({ bgColor: "#4286F4" });
 					
 					/**

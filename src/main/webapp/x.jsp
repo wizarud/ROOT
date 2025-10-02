@@ -117,8 +117,7 @@ body, div, section, iframe {
 	</script>
 	
 	<script src="<%= contextRootURL %>/wayosapp.js"></script>
-	<%--
-	 --%>
+	<%-- --%>
 	<script>
 	//Paste for Test
 	</script>
@@ -289,7 +288,7 @@ body, div, section, iframe {
 
 	<section id="footer" class="context">
 		<div class="col-md-12" style="text-align: center; padding: 0; touch-action: none;">
-			<wayos-let id="play" data-speak="yes" data-session-id="<%= sessionId %>" data-url="<%= playURL %>" data-message="<%= message %>" data-top-id="xNav" data-top="ring|chat" data-chat="no" data-onload="applyTheme" data-onmessage="onWSMessage"></wayos-let>
+			<wayos-let id="play" data-speak="yes" data-session-id="<%= sessionId %>" data-url="<%= playURL %>" data-message="<%= message %>" data-top-id="xNav" data-topX="ring|chat" data-chat="no" data-onload="applyTheme" data-onmessage="onWSMessage"></wayos-let>
 		</div>
 	</section>			
 </html>

@@ -1,7 +1,7 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ page import="java.util.*, x.org.json.*, com.wayos.*, com.wayos.util.*, com.wayos.Application, com.wayos.connector.SessionPool" %>
 
-	<section id="social" class="social" style="padding-top: 10px; padding-bottom: 0px">
+	<section id="social" class="social" style="padding-top: 0px; padding-bottom: 0px">
 		<div class="container">
 			<div class="row">
 				<div class="social-wrapper">

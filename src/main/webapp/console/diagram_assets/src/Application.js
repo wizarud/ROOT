@@ -206,7 +206,7 @@ limz_Application = Class.extend(
 	            var writer = new draw2d.io.json.Writer();
 	            writer.marshal(this.view, $.proxy(function (data) {
 					
-	                this.backend.save(this.contextId, this.createLimzContext(data), $.proxy(function () {
+	                this.backend.save(this.contextId, this.createSavingContext(data), $.proxy(function () {
 	                    this.view.getCommandStack().markSaveLocation();
 	                    this.updateQuota();
 	                }, this));
@@ -214,7 +214,7 @@ limz_Application = Class.extend(
 	            }, this));
 	        },        
 
-	        createLimzContext: function (data) {
+	        createSavingContext: function (data) {
 
 				//Call from Save..
 	            const content = { nodes: [], attr: {connections: []} };

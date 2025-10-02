@@ -89,7 +89,6 @@ public class AppListener implements ServletContextListener {
 		/**
 		 * Not yet? let start!
 		 */
-
 		runningObj = new JSONObject();
 		runningObj.put("timestamp", new java.util.Date());
 		storage.write(runningObj.toString(), "running.json");
