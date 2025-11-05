@@ -14,7 +14,7 @@
 %>
 
 <script type="text/javascript">
-var domain = '<%= System.getenv("domain") %>';
+var domain = '<%= com.wayos.Configuration.domain(request) %>';
 var contextRoot = '<%= application.getContextPath() %>';
 var accountId = '<%= accountId %>';
 var botId;

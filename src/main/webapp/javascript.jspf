@@ -1,5 +1,5 @@
 <script>
-var domain = '<%= Configuration.domain %>';
+var domain = '<%= Configuration.domain(request) %>';
 var contextRoot = '<%= contextRoot %>';
 </script>
 

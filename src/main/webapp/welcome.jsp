@@ -8,7 +8,7 @@ String botId = System.getenv("showcaseBotId");
 
 String contextRoot = application.getContextPath();
 
-String contextRootURL = Configuration.domain + contextRoot;
+String contextRootURL = Configuration.domain(request) + contextRoot;
 
 String playURL = contextRootURL + "/x/" + accountId + "/" + botId;
 	

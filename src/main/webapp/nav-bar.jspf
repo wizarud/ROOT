@@ -37,7 +37,7 @@
 					<%--@ include file="fbSDK.jspf" --%>
 					<%
 					
-					String domain = System.getenv("domain");
+					String domain = com.wayos.Configuration.domain(request);
 					
 					//For highlight TAG Menu
 					java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com.wayos.i18n.text");

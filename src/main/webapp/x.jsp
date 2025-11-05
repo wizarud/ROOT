@@ -32,7 +32,7 @@
 		message = "";
 	}
 		
-	String contextRootURL = Configuration.domain + contextRoot;
+	String contextRootURL = Configuration.domain(request) + contextRoot;
 	String playURL = contextRootURL + "/x/" + accountId + "/" + botId;
 
 %>
@@ -69,11 +69,11 @@ body, div, section, iframe {
 <meta property="og:type" content="website" />
 <meta property="og:title" content="<%= properties.optString("title") %>" />
 <meta property="og:description" content="<%= properties.optString("description") %>" />
-<meta property="og:url" content="<%= Configuration.domain + contextRoot %>/x/<%= accountId %>/<%= botId %>" />
-<meta property="og:image" content="<%= Configuration.domain + contextRoot %>/public/<%= accountId %>/<%= botId %>.PNG" />
-<meta property="og:image:alt" content="<%=  Configuration.domain + contextRoot %>/images/gigi.png" />
+<meta property="og:url" content="<%= Configuration.domain(request) + contextRoot %>/x/<%= accountId %>/<%= botId %>" />
+<meta property="og:image" content="<%= Configuration.domain(request) + contextRoot %>/public/<%= accountId %>/<%= botId %>.PNG" />
+<meta property="og:image:alt" content="<%=  Configuration.domain(request) + contextRoot %>/images/gigi.png" />
 
-<link rel="icon" type="image/png" href="<%= Configuration.domain + contextRoot %>/public/<%= accountId %>/<%= botId %>.PNG">
+<link rel="icon" type="image/png" href="<%= Configuration.domain(request) + contextRoot %>/public/<%= accountId %>/<%= botId %>.PNG">
 
 </head>
 <body>
@@ -106,7 +106,7 @@ body, div, section, iframe {
 		 	  	if (xhr.readyState == 4 && xhr.status == 200) {		 
 		 			if (xhr.responseText == "success") {
 		 					 				
-	 				  window.location.href = "<%= Configuration.domain + contextRoot %>/x/<%= accountId %>/<%= botId %>";
+	 				  window.location.href = "<%= Configuration.domain(request) + contextRoot %>/x/<%= accountId %>/<%= botId %>";
 		 				
 		 			}
 		 		}

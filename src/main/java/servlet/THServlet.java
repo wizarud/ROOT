@@ -19,7 +19,7 @@ public class THServlet extends ConsoleServlet {
 
 		String contextRoot = req.getContextPath();
 				
-		String contextRootURL = Configuration.domain + contextRoot;
+		String contextRootURL = Configuration.domain(req) + contextRoot;
 		
 		resp.sendRedirect(contextRootURL + "/x/eoss-th/web");
 		

@@ -78,7 +78,7 @@ public class GenerateLyricsBotServlet extends HttpServlet {
             long utcTimestamp = Instant.now().getEpochSecond();
             String botId = convertToBase36(utcTimestamp);
             
-            String widgetURL = Configuration.domain + "/lyrics/" + CONTEXT_ID + "/" + botId;
+            String widgetURL = Configuration.domain(request) + "/lyrics/" + CONTEXT_ID + "/" + botId;
             
             String result = template.replace("{title}", title)
             						.replace("{widgetURL}", widgetURL)
@@ -124,7 +124,7 @@ public class GenerateLyricsBotServlet extends HttpServlet {
             
             saveContext(result, contextName);
                         
-            String lyricsURL = Configuration.domain + "/x/" + CONTEXT_ID + "/" + APP_ID + "?message=afterRecord " + contextName;
+            String lyricsURL = Configuration.domain(request) + "/x/" + CONTEXT_ID + "/" + APP_ID + "?message=afterRecord " + contextName;
             
             response.getWriter().write(lyricsURL);
         	

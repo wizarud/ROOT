@@ -24,7 +24,7 @@
 		message = "";
 	}
 		
-	String contextRootURL = Configuration.domain + contextRoot;
+	String contextRootURL = Configuration.domain(request) + contextRoot;
 	String playURL = contextRootURL + "/x/" + accountId + "/" + botId;
 	
 	String title = properties.optString("title");
@@ -105,11 +105,11 @@ body {
 <meta property="og:type" content="website" />
 <meta property="og:title" content="<%= properties.optString("title") %>" />
 <meta property="og:description" content="<%= properties.optString("description") %>" />
-<meta property="og:url" content="<%= Configuration.domain + contextRoot %>/x/<%= accountId %>/<%= botId %>" />
-<meta property="og:image" content="<%= Configuration.domain + contextRoot %>/public/<%= accountId %>/<%= botId %>.PNG" />
-<meta property="og:image:alt" content="<%=  Configuration.domain + contextRoot %>/images/gigi.png" />
+<meta property="og:url" content="<%= Configuration.domain(request) + contextRoot %>/x/<%= accountId %>/<%= botId %>" />
+<meta property="og:image" content="<%= Configuration.domain(request) + contextRoot %>/public/<%= accountId %>/<%= botId %>.PNG" />
+<meta property="og:image:alt" content="<%=  Configuration.domain(request) + contextRoot %>/images/gigi.png" />
 
-<link rel="icon" type="image/png" href="<%= Configuration.domain + contextRoot %>/public/<%= accountId %>/<%= botId %>.PNG">
+<link rel="icon" type="image/png" href="<%= Configuration.domain(request) + contextRoot %>/public/<%= accountId %>/<%= botId %>.PNG">
 
 </head>
 <body onclick="tab()" style="height: 100vh; background-color: black">
@@ -267,7 +267,7 @@ function registerLineQueues(queueStrings) {
 
 function updateTimeIndices() {
 	
-	let url = "<%= Configuration.domain + contextRoot %>/g";
+	let url = "<%= Configuration.domain(request) + contextRoot %>/g";
 	let xhr = new XMLHttpRequest();
 		
 	let params = "timeIndices=" + encodeURIComponent(recordTape) + "&contextName=" + contextName;
