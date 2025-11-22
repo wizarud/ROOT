@@ -7,6 +7,16 @@
 <!-- 	<listener> -->
 <!-- 		<listener-class>listener.AppListener</listener-class> -->
 <!-- 	</listener> -->
+<filter>
+    <filter-name>CORSFilter</filter-name>
+    <filter-class>filter.CORSFilter</filter-class>
+</filter>
+
+<filter-mapping>
+    <filter-name>CORSFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+
 	<servlet>
 		<servlet-name>VesionCheckerServlet</servlet-name>
 		<display-name>VesionCheckerServlet</display-name>
