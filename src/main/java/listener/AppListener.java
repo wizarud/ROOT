@@ -37,7 +37,9 @@ public class AppListener implements ServletContextListener {
 		 * Check is deploy on PI or not?
 		 * Retrieve PI Machine Id from /proc/cpuinfo
 		 */
-		String piMachineId = piMachineId();
+		//String piMachineId = piMachineId();
+		
+		String piMachineId = null; //Skip For yiem.cc		
 
 		String storagePath;
 
