@@ -74,6 +74,7 @@ public class AppListener implements ServletContextListener {
 		/**
 		 * Check this listener is already start or not?
 		 */
+		/* Skip for yiem Docker
 		JSONObject runningObj = storage.readAsJSONObject("running.json");
 		
 		if (runningObj!=null) {		
@@ -85,15 +86,14 @@ public class AppListener implements ServletContextListener {
 			return;
 
 		}
-
-		System.out.println("Initialized.." + storagePath);
-
-		/**
-		 * Not yet? let start!
-		 */
+		// Not yet? let start!
 		runningObj = new JSONObject();
 		runningObj.put("timestamp", new java.util.Date());
 		storage.write(runningObj.toString(), "running.json");
+		*/
+
+		System.out.println("Initialized.." + storagePath);
+
 
 		ConsoleUtil consoleUtil = new ConsoleUtil(storage);
 

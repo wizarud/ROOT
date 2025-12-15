@@ -83,6 +83,10 @@
  */
 $('#reply_button').click(function () {
 			
+    const message = $("#chat_widget_input").val(); //get the value from the text input
+	const keyword = $("#keyword").val();
+	const target = $("#target").text();
+	
 	if (target==='') {
 		alert('Please select a letter you want to reply (^o^)ๆ');
 		return;
@@ -90,11 +94,7 @@ $('#reply_button').click(function () {
 	
 	$("#reply_button").attr("disabled", true);
 	$("#reply_button").val(sending_text);
-	   
-    const message = $("#chat_widget_input").val(); //get the value from the text input
-	const keyword = $("#keyword").val();
-	const target = $("#target").text();
-		
+	   		
     const data = {message, keyword, target};
     
     //console.log("(^o^)ๆ Boardcast to " + contextName(botId));
