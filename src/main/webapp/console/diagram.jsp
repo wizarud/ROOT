@@ -41,6 +41,10 @@
     opacity: 1;
 }
 
+.xpointer {
+  cursor: pointer;
+}
+
 </style>
 
 <SCRIPT src="./diagram_assets/draw2d/lib/shifty.js"></SCRIPT>

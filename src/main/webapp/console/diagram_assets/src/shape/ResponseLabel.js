@@ -216,13 +216,13 @@ limz_ResponseLabel = draw2d.shape.basic.Label.extend({
                 	"pdf": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/800px-PDF_file_icon.svg.png",
                 	"ppt": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Microsoft_Office_PowerPoint_%282018–present%29.svg",
                 	"pptx": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Microsoft_Office_PowerPoint_%282018–present%29.svg",
-                	"mp3": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Sound_mp3.png/90px-Sound_mp3.png",
-					"wav": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Sound_mp3.png/90px-Sound_mp3.png",
-                	"m4a": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Sound_mp3.png/90px-Sound_mp3.png",
-					"ogg": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Sound_mp3.png/90px-Sound_mp3.png",
-                	//"mp4": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Sound_mp3.png/90px-Sound_mp3.png",
                 	"doc": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/.docx_icon.svg/800px-.docx_icon.svg.png",
                 	"docx": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/.docx_icon.svg/800px-.docx_icon.svg.png",
+					"mp3": "/images/audio.png",
+					"wav": "/images/audio.png",
+					"m4a": "/images/audio.png",
+					"ogg": "/images/audio.png",
+					//"mp4": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Sound_mp3.png/90px-Sound_mp3.png",
                 };
 				
 				if (checkTxt.endsWith(".mp4")) {
@@ -271,6 +271,14 @@ limz_ResponseLabel = draw2d.shape.basic.Label.extend({
 				window.open(url, '_blank');
 				
 			};
+			
+			imageFigure.onMouseEnter = function () {
+				imageFigure.addCssClass("xpointer");	
+			};
+
+			imageFigure.onMouseLeave = function () {
+				imageFigure.removeCssClass("xpointer");	
+			};
 			    		    			
 			const newHeight = (image.height / image.width) * this._entity.getWidth();        			
 			imageFigure.setMinHeight(newHeight);
@@ -278,7 +286,7 @@ limz_ResponseLabel = draw2d.shape.basic.Label.extend({
 			this._entity.add(imageFigure, new draw2d.layout.locator.BottomLocator());
 			    		    			
 		}.bind(this);
-		
+				
 		image.onerror = function () {}
 		image.src = src;	    		
 		
