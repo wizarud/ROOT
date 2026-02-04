@@ -157,7 +157,10 @@ limz_View = draw2d.Canvas.extend({
         				
         				const text = e.figure.getText();
         				
-        				if (text.startsWith("https://") || text.startsWith("http://")) {
+        				if (text.startsWith("https://") || 
+							text.startsWith("http://") ||
+							text.startsWith("/public/")
+						) {
         					
                     		e.figure.setText(text);
         				}
