@@ -141,7 +141,7 @@ class WayOS {
 		}
 		this.coverImageURL = this.webhookURL.replace('webhooks', 'public') + '.PNG';
 		this.defaultMenuImageURL = this.webhookURL.substring(0, this.webhookURL.indexOf('/webhooks')) + '/images/gigi.png';
-		this.ringURL = this.webhookURL.substring(0, this.webhookURL.indexOf('/webhooks')) + '/ogg/question_003.ogg';
+		this.ringURL = '/ogg/question_003.ogg';
 
 		this.sessionId = sessionId;
 		
@@ -548,13 +548,10 @@ class FrameUX {
 			bottom: 15%;
 			transform: translateX(-8px);
 		}
-		/*
 		video {
 			width: 100%;
 	    	height: 100%;
-			object-fit: cover;
 		}
-		*/
 		video::-webkit-media-controls-start-playback-button {
 		    display: none !important;
 		    opacity: 0 !important;
@@ -934,9 +931,9 @@ class FrameUX {
         					
         		} else {
         			
-        			clickEvent = "wayOS.parse('" + this.escapeHtml(choice.parent + " " + choice.label) + "', this)";
+        			clickEvent = "wayOS.parentElement.play('/ogg/maximize_006.ogg');wayOS.parse('" + this.escapeHtml(choice.parent + " " + choice.label) + "', this)";
         					
-        			html += "<div class=\"wayos-menu-item\" onclick=\"" + clickEvent + "\">" + choice.label + "</div>";
+        			html += "<div class=\"wayos-menu-item\" onclick=\"" + clickEvent + "\" onmouseover=\"wayOS.parentElement.play('/ogg/click_002.ogg')\" onmouseout=\"wayOS.parentElement.play('/ogg/click_003.ogg')\">" + choice.label + "</div>";
         		}
         	}
         	
@@ -1008,7 +1005,8 @@ class AnimateFrameUX extends FrameUX {
 					let fadeOutAnimation = that.content.animate(fadeOut, timing);
 					fadeOutAnimation.onfinish = (event) => {
 						
-						step();							
+						//Clear Content if any
+						that.setInnerHTML("", (frame)=>{step()});
 						
 					};
 
@@ -1084,7 +1082,7 @@ class AnimateFrameUX extends FrameUX {
 			if (message.type==='video') {
 				
 				this.clearIconImage();
-				//this.clearBackgroundImage();
+				this.clearBackgroundImage();
 				
 				let video = document.createElement('video');
 				
@@ -1096,30 +1094,14 @@ class AnimateFrameUX extends FrameUX {
 										
 					//this.clearIconImage();//Clear					
 					
-					//if (next) next();
-					
 					let canvas = document.createElement('canvas');
-					
-					//canvas.width = window.innerWidth;
-					//canvas.height = window.innerHeight;
-					
-					//let ctx = canvas.getContext('2d');					
-					
-					//Draw BackgroundImage
-					//Use default border color as filled background color
-										
-					//Draw Captured Video Image
-					//let centerX = canvas.width / 2 - video.videoWidth / 2;
-					//ctx.drawImage(video, centerX, 0, video.videoWidth, video.videoHeight);
-					
-					//this.setBackgroundImage(videoCapturedURI, (frame)=>{if (next) next()});
 					
 					canvas.width = video.videoWidth;
 					canvas.height = video.videoHeight;
 					
 					let ctx = canvas.getContext('2d');					
 					
-					ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);					
+					ctx.drawImage(video, 0, 0, canvas.width, canvas.height);					
 					
 					let videoCapturedURI = canvas.toDataURL('image/png');
 										
@@ -1154,18 +1136,21 @@ class AnimateFrameUX extends FrameUX {
 					
 				}
 				
+				video.onloadedmetadata = function() {
+				    video.setAttribute("width", window.innerWidth > video.videoWidth ? video.videoWidth : window.innerWidth);
+				    video.setAttribute("height", window.innerHeight > video.videoHeight ? video.videoHeight : window.innerHeight);
+				};				
+				
 				video.play().catch(error => {
 					
-					alert(error);
+					//alert(error);
+					alert("Please press the ring button to start!");
 				    
 				});
-				
+								
 				//video.style.aspectRatio = "unset";
 				video.style.objectFit = "contain";
-				
-			    //video.setAttribute("width", window.innerWidth);
-			    //video.setAttribute("height", window.innerHeight);
-			    
+							    
 				// Ensure inline playback on iOS
 			    video.setAttribute("playsinline", "true");
 			    video.setAttribute("webkit-playsinline", "true");
@@ -1341,7 +1326,7 @@ class AnimateFrameUX extends FrameUX {
 				
 		this.setText(innerHTML, function (frame) {
 					
-				if (this.parentElement.speak) {
+				if (!text.startsWith(".") && this.parentElement.speak) {
 															
 					this.parentElement.wayOS.speak(text);
 				}
@@ -1928,7 +1913,9 @@ class Wayoslet extends HTMLElement {
 			if (from && 
 					from.parentElement && 
 					from.parentElement.parentElement && 
-					from.parentElement.parentElement.getAttribute("class")==="vertical-center") {
+					(from.parentElement.parentElement.getAttribute("class")==="vertical-bottom" || 
+					from.parentElement.parentElement.getAttribute("class")==="vertical-center")
+					) {
 				
 				from.style.backgroundColor = "grey";
 				
@@ -1957,7 +1944,11 @@ class Wayoslet extends HTMLElement {
 					let fadeOutAnimation = from.parentElement.parentElement.animate(fadeOut, timing);
 					fadeOutAnimation.onfinish = (event) => {
 						
-						from.parentElement.parentElement.innerHTML="";					
+						try {
+							from.parentElement.parentElement.innerHTML="";					
+						} catch (e) {
+							console.log(e);
+						}
 						
 					};
 					
@@ -2174,7 +2165,7 @@ customElements.define('wayos-let', Wayoslet/*, { extends: 'div' }*/);
 			return;
 		}
 		
-		playAudio('/public/eoss-th/question_003.ogg');
+		playAudio('/ogg/question_003.ogg');
 		
 	  	updateAllUnreadMessages(playURL, "unread");
 	  	

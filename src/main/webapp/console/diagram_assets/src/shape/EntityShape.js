@@ -159,7 +159,7 @@ limz_EntityShape = draw2d.shape.layout.VerticalLayout.extend({
 				/**
 				 * Apply Tool Color
 				 */
-				console.log("Unmashalling.." + JSON.stringify(label.getUserData()));
+				//console.log("Unmashalling.." + JSON.stringify(label.getUserData()));
 				
 				if (label.getUserData()!==null && label.getUserData()[0].parameterName==='hook') {
 					

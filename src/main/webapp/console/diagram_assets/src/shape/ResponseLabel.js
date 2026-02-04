@@ -220,49 +220,96 @@ limz_ResponseLabel = draw2d.shape.basic.Label.extend({
 					"wav": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Sound_mp3.png/90px-Sound_mp3.png",
                 	"m4a": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Sound_mp3.png/90px-Sound_mp3.png",
 					"ogg": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Sound_mp3.png/90px-Sound_mp3.png",
-                	"mp4": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Sound_mp3.png/90px-Sound_mp3.png",
+                	//"mp4": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Sound_mp3.png/90px-Sound_mp3.png",
                 	"doc": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/.docx_icon.svg/800px-.docx_icon.svg.png",
                 	"docx": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/.docx_icon.svg/800px-.docx_icon.svg.png",
                 };
-            	
-        		for (var key in icon_registry) {
-        			if (checkTxt.endsWith("." + key)) {
-        				path = icon_registry[key];
-        				break;
-        			}
-        		}
-        		
+				
+				if (checkTxt.endsWith(".mp4")) {
+					
+					this.captureResizedThumbnail(checkTxt, 300, 400)
+					  .then((imgSrc) => {
+						this.addImageThumbnail(imgSrc, checkTxt);
+					  })
+					  .catch(console.error);
+					
+				} else {
+					
+					for (var key in icon_registry) {
+						if (checkTxt.endsWith("." + key)) {
+							path = icon_registry[key];
+							break;
+						}
+					}
+				
+				}
+            	        		
         	}
         	
         	if (path) {
-        		
-        		const image = new Image();
-        		image.onload = function () {
-        			    		    			    		    			
-    	    		const imageFigure = new draw2d.shape.basic.Image();
-    	    		imageFigure.attr('cursor', 'pointer');
-    	    		imageFigure.setPath(path);
-    	    		
-    	    		imageFigure.onClick = function () {
-    	    			
-    	    			window.open(txt, '_blank');
-    	    			
-    	    		};
-    	    		    		    			
-        			const newHeight = (image.height / image.width) * _entity.getWidth();        			
-    	    		imageFigure.setMinHeight(newHeight);
-    	    		
-    	    		_entity.add(imageFigure, new draw2d.layout.locator.BottomLocator());
-    	    		    		    			
-        		}
-        		image.onerror = function () {
-        			
-        		}
-        		image.src = path;	    		
+				
+        		this.addImageThumbnail(path, checkTxt);
         	}
         	        	
         }			
 		
+	},
+	
+	addImageThumbnail: function(src, videoSrc) {
+		
+		const image = new Image();
+		image.onload = function () {
+			    		    			    		    			
+			const imageFigure = new draw2d.shape.basic.Image();
+			imageFigure.attr('cursor', 'pointer');
+			imageFigure.setPath(src);
+			
+			imageFigure.onClick = function () {
+				
+				let url = videoSrc ? videoSrc : src;
+				
+				window.open(url, '_blank');
+				
+			};
+			    		    			
+			const newHeight = (image.height / image.width) * this._entity.getWidth();        			
+			imageFigure.setMinHeight(newHeight);
+			
+			this._entity.add(imageFigure, new draw2d.layout.locator.BottomLocator());
+			    		    			
+		}.bind(this);
+		
+		image.onerror = function () {}
+		image.src = src;	    		
+		
+	},
+	
+	captureResizedThumbnail: function(videoSrc, width, height, time = 1) {
+	  return new Promise((resolve, reject) => {
+	    const video = document.createElement("video");
+	    video.src = videoSrc;
+	    video.crossOrigin = "anonymous";
+	    video.muted = true;
+
+	    video.onloadedmetadata = () => {
+	      video.currentTime = Math.min(time, video.duration);
+	    };
+
+	    video.onseeked = () => {
+	      const canvas = document.createElement("canvas");
+	      canvas.width = width;
+	      canvas.height = height;
+
+	      const ctx = canvas.getContext("2d");
+
+	      // Resize while drawing
+	      ctx.drawImage(video, 0, 0, width, height);
+
+	      resolve(canvas.toDataURL("image/png"));
+	    };
+
+	    video.onerror = reject;
+	  });
 	}
 	
 });
