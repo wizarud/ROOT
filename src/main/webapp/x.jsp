@@ -188,7 +188,7 @@ class WayOS {
 				localStorage.removeItem('logic-designer');
 				
 			}
-			console.log("LocalStorage sessionId " + this.sessionId);
+			//console.log("LocalStorage sessionId " + this.sessionId);
 			
 			this.useServerGenerateSessionId = true;
 			
@@ -256,7 +256,7 @@ class WayOS {
  			
  		    if (xhr.status === 200) {
  		    	
- 		 		console.log("To onmessage .." + xhr.responseText); 		    	
+ 		 		//console.log("To onmessage .." + xhr.responseText); 		    	
  		    	
  		    	this.onmessages(JSON.parse(xhr.responseText));
  		    	
@@ -525,6 +525,7 @@ class FrameUX {
 			color: white;
 			width: 100%;
 			transform: translateX(-8px);
+			z-index: 999;
 		}
 		.vertical-center-icon {
 			margin: 0;
@@ -548,10 +549,12 @@ class FrameUX {
 			bottom: 15%;
 			transform: translateX(-8px);
 		}
+		/*
 		video {
 			width: 100%;
 	    	height: 100%;
 		}
+		*/
 		video::-webkit-media-controls-start-playback-button {
 		    display: none !important;
 		    opacity: 0 !important;
@@ -581,30 +584,26 @@ class FrameUX {
 		.wayos-label { 
 			cursor: pointer; 
 			width: 80%; 
+			margin: 30px; 
 			border-radius: 15px; 
-			-moz-border-radius: 15px; 
-			-webkit-border-radius: 15px; 
 			padding: 2px 10px; 
 			color: white; 
 			background: ${this.props.borderColor}
 		} 
 		.wayos-menu {
 		    border-radius: 15px;
-		    -moz-border-radius: 15px;
-		    -webkit-border-radius: 15px;
 		}
 		.wayos-menu-item { 
 			cursor: pointer; 
-			width: 80%; 
-			margin: 5px; 
-			padding: 5px 10px; 
-			border-radius: 5px; 
-			-moz-border-radius: 5px; 
-			-webkit-border-radius: 5px; 
+			//width: 80%; 
+			width: fit-content;
+			margin: 20px; 
+			padding: 5px 40px; 
+			border-radius: 20px; 
 			background: #FFFFFF; 
 			text-align: center; 
 			color: ${this.props.borderColor}; 
-			border: 1px solid ${this.props.borderColor} 
+			border: 2px solid ${this.props.borderColor} 
 		}`;
 		
 		this.frame.contentDocument.head.appendChild(style);		
@@ -1084,6 +1083,100 @@ class AnimateFrameUX extends FrameUX {
 				this.clearIconImage();
 				this.clearBackgroundImage();
 				
+				const video = document.createElement('video');
+				
+				//video.muted = true;
+				
+				video.setAttribute("playsinline", "false");
+			    video.setAttribute("webkit-playsinline", "false");
+				
+				video.src = message.src;
+				video.style.display = 'none';
+				video.style.width = '0';
+				video.style.height = '0';
+				
+				const canvas = document.createElement("canvas");
+
+				canvas.style.width = '100%';
+				canvas.style.height = '100%';
+				canvas.style.objectFit = "contain";//Important! to fit parent Element
+				
+				this.icon.appendChild(video);
+				this.icon.appendChild(canvas);
+				
+				const ctx = canvas.getContext("2d");
+
+				// match canvas size to video
+				video.onloadedmetadata = function() {
+					  canvas.width = video.videoWidth;
+					  canvas.height = video.videoHeight;
+				};				
+				
+				let that = this;
+				video.play().catch(error => {
+					
+					that.setText("<h1 class=\"wayos-label\">Press 🔔 to Start!</h1>");
+				    
+				});
+				
+				video.onplay = function () {
+					
+					const timing = {
+					  		duration: 500,
+							iterations: 1,
+						};
+					
+					let fadeIn = [
+						{ opacity: "0" },
+						{ opacity: "1" },
+					];				
+					
+					let fadeInAnimation = video.animate(fadeIn, timing);
+					fadeInAnimation.onfinish = (event) => {
+						
+						//video.muted = false;
+						
+					};					
+					
+				}.bind(this);
+								
+				video.onended = function() {
+					
+					video.remove();						
+					step();
+																		
+				}.bind(this);				
+
+				// draw each frame
+				function drawFrame() {
+				  if (!video.paused && !video.ended) {
+				    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+				    requestAnimationFrame(drawFrame);
+				  }
+				  
+				 /*
+				  if (video.ended) {
+						let videoCapturedURI = canvas.toDataURL('image/png');						
+						that.setIconImage(that.img(videoCapturedURI), (frame)=>{
+							canvas.remove();
+							if (next) next();
+						});							  
+				  }
+				  */
+
+				}
+
+				// start drawing when video plays
+				video.addEventListener("play", drawFrame);				
+																
+			    video.play();
+			}
+			
+			if (message.type==='_video') {
+				
+				this.clearIconImage();
+				this.clearBackgroundImage();
+				
 				let video = document.createElement('video');
 				
 				video.src = message.src;
@@ -1149,11 +1242,11 @@ class AnimateFrameUX extends FrameUX {
 				});
 								
 				//video.style.aspectRatio = "unset";
-				video.style.objectFit = "contain";
+				//video.style.objectFit = "contain";
 							    
 				// Ensure inline playback on iOS
-			    video.setAttribute("playsinline", "true");
-			    video.setAttribute("webkit-playsinline", "true");
+			    //video.setAttribute("playsinline", "true");
+			    //video.setAttribute("webkit-playsinline", "true");
 			    
 			    video.play();
 					
@@ -1622,7 +1715,7 @@ class ChatBar {
 		
 	init(props) {
 		
- 		console.log("Apply Console style.." + JSON.stringify(props));
+ 		//console.log("Apply Console style.." + JSON.stringify(props));
  	  	
  		this.inputTextArea.disabled = false;
  		this.inputTextArea.autofocus = true;
@@ -2069,7 +2162,7 @@ class Wayoslet extends HTMLElement {
 	
 		this.audio.src = src;
 		
-		console.log("Play Audio: " + this.audio.src);
+		//console.log("Play Audio: " + this.audio.src);
 		
 		try {
 			this.audio.play();			
