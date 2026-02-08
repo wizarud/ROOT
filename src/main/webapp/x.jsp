@@ -1315,6 +1315,21 @@ class AnimateFrameUX extends FrameUX {
 			if (message.type==='text') {
 			
 				let text = message.text;
+				
+				/**
+				* Experimental to support redirect for last text message
+				* Example: >><redirect to keywords>
+				*/
+				if (messages.length === 0) {
+					
+					if (text.startsWith('>>')) {
+						const redirectKeywords = text.substr(2);
+						console.log ('Redirect to >>' + redirectKeywords);
+						this.setText('');
+						this.parentElement.wayOS.parse(redirectKeywords);						
+						return;
+					}
+				}				
 								
 				if (text.endsWith(".."))
 					this.animateTypingText(text, next);
@@ -1346,7 +1361,7 @@ class AnimateFrameUX extends FrameUX {
 						
 					}
 						
-				}
+				}				
 				
 			}
 				
@@ -2071,7 +2086,7 @@ class Wayoslet extends HTMLElement {
 			//if (parentElement.frameUX.content)
 				//parentElement.frameUX.content.innerHTML = "";
 			
-			parentElement.removeLoader();
+			parentElement.removeLoader();			
 			
 			//TODO: Reload only src is not blank to switch from widget to blank frame src					
 			if (parentElement.frameUX.isWidget())

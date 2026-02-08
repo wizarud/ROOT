@@ -43,6 +43,9 @@
 <script src="js/lib/jquery-ui.min.js"></script>
 <script type="text/javascript">
 
+const textarea = document.querySelector("textarea");
+let lastCursor = 0;
+
 function loadWay() {
 	
 	overlayPopup("loader");
@@ -110,5 +113,98 @@ function onBotListLoaded() {
 	$("#chat_widget_button").show();
 		
 }
+
+function upload(file) {
+	
+    formData = new FormData();
+	  formData.append('content[]', file, file.name);
+    
+    $.ajax({
+    	url: contextRoot + "/console/storage/public/" + accountId + "/" + file.name,
+        type: "POST",
+        data: formData,
+        enctype: 'multipart/form-data',
+        processData: false,
+        contentType: false
+      }).done(function(data) {
+      	
+       	//Use Relative Path Instead
+      	const path = '/public/' + accountId + '/' + encodeURI(file.name) + '\n\n'; 
+       	
+        insertAtPosition(textarea, path, lastCursor);
+      	      	
+      }).fail(function(jqXHR, textStatus) {
+      	
+      	const msg = "Upload " + file.name + " " + textStatus;
+      	
+      	alert(msg);
+      });   
+	
+}
+
+textarea.addEventListener("click", () => {
+  lastCursor = textarea.selectionStart;
+});
+
+textarea.addEventListener("keyup", () => {
+  lastCursor = textarea.selectionStart;
+});
+
+textarea.addEventListener("dragover", (e) => e.preventDefault());
+
+textarea.addEventListener("drop", (e) => {
+	
+  e.stopPropagation();
+  e.preventDefault();
+      		  
+  if (!e.dataTransfer) return;
+  
+  var files = [];
+
+  if (e.dataTransfer.items) {
+    // Use DataTransferItemList interface to access the file(s)
+    for (var i = 0; i < e.dataTransfer.items.length; i++) {
+      // If dropped items aren't files, reject them
+      if (e.dataTransfer.items[i].kind === 'file') {
+    	  
+        files.push(e.dataTransfer.items[i].getAsFile());
+        
+      } else {
+    	  
+    	  e.dataTransfer.items[i].getAsString(function (s) {
+    		  console.log("(-.-)ๆ " + e.dataTransfer.items[i].type + ":" +s);
+    	  });    		    	  
+      }
+    }
+  } else {
+    // Use DataTransfer interface to access the file(s)
+    for (var i = 0; i < e.dataTransfer.files.length; i++) {
+    	
+        files.push(e.dataTransfer.files[i]);
+
+    }
+  }
+      		      		  
+  var file;
+  var figure;
+      		      		  
+  var formData;
+  
+  for (var i in files) {
+	  
+	  file = files[i];
+	  		      			  
+	  upload(file);
+	  
+  }
+  
+});
+
+function insertAtPosition(el, text, pos) {
+  el.value = el.value.slice(0, pos) + text + el.value.slice(pos);
+  el.selectionStart = el.selectionEnd = pos + text.length;
+  el.focus();
+}
+
 </script>
 </html>
