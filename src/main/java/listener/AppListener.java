@@ -130,8 +130,8 @@ public class AppListener implements ServletContextListener {
 		/**
 		 * Register SilentPusher
 		 */
-		MessageTimer silentFire = new MessageTimer(storage);
-		Application.instance().register(MessageTimer.class.getName(), silentFire);
+		MessageTimer messageTimer = new MessageTimer(storage);
+		Application.instance().register(MessageTimer.class.getName(), messageTimer);
 
 		/**
 		 * Load pending task from saved file
@@ -157,9 +157,9 @@ public class AppListener implements ServletContextListener {
 				
 				contextName = accountId + "/" + botId;
 				
-				silentFire.register(MessageTimerTask.build(contextName, taskObj));
+				messageTimer.register(MessageTimerTask.build(contextName, taskObj));
 				
-			}			
+			}
 			
 		}		
 		
@@ -171,11 +171,11 @@ public class AppListener implements ServletContextListener {
 		/**
 		 * Cancel all silent task
 		 */
-		MessageTimer silentFire = Application.instance().get(MessageTimer.class);
+		MessageTimer messageTimer = Application.instance().get(MessageTimer.class);
 		
-		if (silentFire!=null) {
+		if (messageTimer!=null) {
 			
-			silentFire.cancelAll();
+			messageTimer.cancelAll();
 			
 		}
 		
