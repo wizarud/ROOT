@@ -20,7 +20,7 @@ class WayOS {
 		}
 		this.coverImageURL = this.webhookURL.replace('webhooks', 'public') + '.PNG';
 		this.defaultMenuImageURL = this.webhookURL.substring(0, this.webhookURL.indexOf('/webhooks')) + '/images/gigi.png';
-		this.ringURL = this.webhookURL.substring(0, this.webhookURL.indexOf('/webhooks')) + '/ogg/question_003.ogg';
+		this.ringURL = '/ogg/question_003.ogg';
 
 		this.sessionId = sessionId;
 		
@@ -67,7 +67,7 @@ class WayOS {
 				localStorage.removeItem('logic-designer');
 				
 			}
-			console.log("LocalStorage sessionId " + this.sessionId);
+			//console.log("LocalStorage sessionId " + this.sessionId);
 			
 			this.useServerGenerateSessionId = true;
 			
@@ -135,7 +135,7 @@ class WayOS {
  			
  		    if (xhr.status === 200) {
  		    	
- 		 		console.log("To onmessage .." + xhr.responseText); 		    	
+ 		 		//console.log("To onmessage .." + xhr.responseText); 		    	
  		    	
  		    	this.onmessages(JSON.parse(xhr.responseText));
  		    	
@@ -404,6 +404,7 @@ class FrameUX {
 			color: white;
 			width: 100%;
 			transform: translateX(-8px);
+			z-index: 999;
 		}
 		.vertical-center-icon {
 			margin: 0;
@@ -427,11 +428,12 @@ class FrameUX {
 			bottom: 15%;
 			transform: translateX(-8px);
 		}
+		/*
 		video {
 			width: 100%;
 	    	height: 100%;
-			object-fit: cover;
 		}
+		*/
 		video::-webkit-media-controls-start-playback-button {
 		    display: none !important;
 		    opacity: 0 !important;
@@ -461,30 +463,26 @@ class FrameUX {
 		.wayos-label { 
 			cursor: pointer; 
 			width: 80%; 
+			margin: 30px; 
 			border-radius: 15px; 
-			-moz-border-radius: 15px; 
-			-webkit-border-radius: 15px; 
 			padding: 2px 10px; 
 			color: white; 
 			background: ${this.props.borderColor}
 		} 
 		.wayos-menu {
 		    border-radius: 15px;
-		    -moz-border-radius: 15px;
-		    -webkit-border-radius: 15px;
 		}
 		.wayos-menu-item { 
 			cursor: pointer; 
-			width: 80%; 
-			margin: 5px; 
-			padding: 5px 10px; 
-			border-radius: 5px; 
-			-moz-border-radius: 5px; 
-			-webkit-border-radius: 5px; 
+			//width: 80%; 
+			width: fit-content;
+			margin: 20px; 
+			padding: 5px 40px; 
+			border-radius: 20px; 
 			background: #FFFFFF; 
 			text-align: center; 
 			color: ${this.props.borderColor}; 
-			border: 1px solid ${this.props.borderColor} 
+			border: 2px solid ${this.props.borderColor} 
 		}`;
 		
 		this.frame.contentDocument.head.appendChild(style);		
@@ -811,9 +809,9 @@ class FrameUX {
         					
         		} else {
         			
-        			clickEvent = "wayOS.parse('" + this.escapeHtml(choice.parent + " " + choice.label) + "', this)";
+        			clickEvent = "wayOS.parentElement.play('/ogg/maximize_006.ogg');wayOS.parse('" + this.escapeHtml(choice.parent + " " + choice.label) + "', this)";
         					
-        			html += "<div class=\"wayos-menu-item\" onclick=\"" + clickEvent + "\">" + choice.label + "</div>";
+        			html += "<div class=\"wayos-menu-item\" onclick=\"" + clickEvent + "\" onmouseover=\"wayOS.parentElement.play('/ogg/click_002.ogg')\" onmouseout=\"wayOS.parentElement.play('/ogg/click_003.ogg')\">" + choice.label + "</div>";
         		}
         	}
         	
@@ -885,7 +883,8 @@ class AnimateFrameUX extends FrameUX {
 					let fadeOutAnimation = that.content.animate(fadeOut, timing);
 					fadeOutAnimation.onfinish = (event) => {
 						
-						step();							
+						//Clear Content if any
+						that.setInnerHTML("", (frame)=>{step()});
 						
 					};
 
@@ -961,7 +960,101 @@ class AnimateFrameUX extends FrameUX {
 			if (message.type==='video') {
 				
 				this.clearIconImage();
-				//this.clearBackgroundImage();
+				this.clearBackgroundImage();
+				
+				const video = document.createElement('video');
+				
+				//video.muted = true;
+				
+				video.setAttribute("playsinline", "false");
+			    video.setAttribute("webkit-playsinline", "false");
+				
+				video.src = message.src;
+				video.style.display = 'none';
+				video.style.width = '0';
+				video.style.height = '0';
+				
+				const canvas = document.createElement("canvas");
+
+				canvas.style.width = '100%';
+				canvas.style.height = '100%';
+				canvas.style.objectFit = "contain";//Important! to fit parent Element
+				
+				this.icon.appendChild(video);
+				this.icon.appendChild(canvas);
+				
+				const ctx = canvas.getContext("2d");
+
+				// match canvas size to video
+				video.onloadedmetadata = function() {
+					  canvas.width = video.videoWidth;
+					  canvas.height = video.videoHeight;
+				};				
+				
+				let that = this;
+				video.play().catch(error => {
+					
+					that.setText("<h1 class=\"wayos-label\">Press 🔔 to Start!</h1>");
+				    
+				});
+				
+				video.onplay = function () {
+					
+					const timing = {
+					  		duration: 500,
+							iterations: 1,
+						};
+					
+					let fadeIn = [
+						{ opacity: "0" },
+						{ opacity: "1" },
+					];				
+					
+					let fadeInAnimation = video.animate(fadeIn, timing);
+					fadeInAnimation.onfinish = (event) => {
+						
+						//video.muted = false;
+						
+					};					
+					
+				}.bind(this);
+								
+				video.onended = function() {
+					
+					video.remove();						
+					step();
+																		
+				}.bind(this);				
+
+				// draw each frame
+				function drawFrame() {
+				  if (!video.paused && !video.ended) {
+				    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+				    requestAnimationFrame(drawFrame);
+				  }
+				  
+				 /*
+				  if (video.ended) {
+						let videoCapturedURI = canvas.toDataURL('image/png');						
+						that.setIconImage(that.img(videoCapturedURI), (frame)=>{
+							canvas.remove();
+							if (next) next();
+						});							  
+				  }
+				  */
+
+				}
+
+				// start drawing when video plays
+				video.addEventListener("play", drawFrame);				
+																
+			    video.play();
+			}
+			
+			if (message.type==='_video') {
+				
+				this.clearIconImage();
+				this.clearBackgroundImage();
 				
 				let video = document.createElement('video');
 				
@@ -973,21 +1066,18 @@ class AnimateFrameUX extends FrameUX {
 										
 					//this.clearIconImage();//Clear					
 					
-					//if (next) next();
-					
 					let canvas = document.createElement('canvas');
 					
-					canvas.width = window.innerWidth;
-					canvas.height = window.innerHeight;
-					
-					console.log(canvas.width + "x" + canvas.height);
+					canvas.width = video.videoWidth;
+					canvas.height = video.videoHeight;
 					
 					let ctx = canvas.getContext('2d');					
-					ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+					
+					ctx.drawImage(video, 0, 0, canvas.width, canvas.height);					
 					
 					let videoCapturedURI = canvas.toDataURL('image/png');
-					
-					this.setBackgroundImage(videoCapturedURI, (frame)=>{if (next) next()});
+										
+					this.setIconImage(this.img(videoCapturedURI), (frame)=>{if (next) next()});
 					
 					video.remove();
 			
@@ -1018,19 +1108,24 @@ class AnimateFrameUX extends FrameUX {
 					
 				}
 				
+				video.onloadedmetadata = function() {
+				    video.setAttribute("width", window.innerWidth > video.videoWidth ? video.videoWidth : window.innerWidth);
+				    video.setAttribute("height", window.innerHeight > video.videoHeight ? video.videoHeight : window.innerHeight);
+				};				
+				
 				video.play().catch(error => {
 					
-					alert(error);
+					//alert(error);
+					alert("Please press the ring button to start!");
 				    
 				});
-				
-				video.style.aspectRatio = "unset";
-				
-			    video.setAttribute("width", window.innerWidth);
-			    video.setAttribute("height", window.innerHeight);
+								
+				//video.style.aspectRatio = "unset";
+				//video.style.objectFit = "contain";
+							    
 				// Ensure inline playback on iOS
-			    video.setAttribute("playsinline", "true");
-			    video.setAttribute("webkit-playsinline", "true");
+			    //video.setAttribute("playsinline", "true");
+			    //video.setAttribute("webkit-playsinline", "true");
 			    
 			    video.play();
 					
@@ -1099,6 +1194,21 @@ class AnimateFrameUX extends FrameUX {
 			if (message.type==='text') {
 			
 				let text = message.text;
+				
+				/**
+				* Experimental to support redirect for last text message
+				* Example: >><redirect to keywords>
+				*/
+				if (messages.length === 0) {
+					
+					if (text.startsWith('>>')) {
+						const redirectKeywords = text.substr(2);
+						console.log ('Redirect to >>' + redirectKeywords);
+						this.setText('');
+						this.parentElement.wayOS.parse(redirectKeywords);						
+						return;
+					}
+				}				
 								
 				if (text.endsWith(".."))
 					this.animateTypingText(text, next);
@@ -1130,7 +1240,7 @@ class AnimateFrameUX extends FrameUX {
 						
 					}
 						
-				}
+				}				
 				
 			}
 				
@@ -1203,7 +1313,7 @@ class AnimateFrameUX extends FrameUX {
 				
 		this.setText(innerHTML, function (frame) {
 					
-				if (this.parentElement.speak) {
+				if (!text.startsWith(".") && this.parentElement.speak) {
 															
 					this.parentElement.wayOS.speak(text);
 				}
@@ -1499,7 +1609,7 @@ class ChatBar {
 		
 	init(props) {
 		
- 		console.log("Apply Console style.." + JSON.stringify(props));
+ 		//console.log("Apply Console style.." + JSON.stringify(props));
  	  	
  		this.inputTextArea.disabled = false;
  		this.inputTextArea.autofocus = true;
@@ -1561,6 +1671,7 @@ class Wayoslet extends HTMLElement {
 				padding: 2px 10px; 
 				//margin-bottom: 5px;
 				margin-left: 5px;
+				background-color: transparent;
 			}
 			.wayos-title-menu { 
 				float: left;
@@ -1790,7 +1901,9 @@ class Wayoslet extends HTMLElement {
 			if (from && 
 					from.parentElement && 
 					from.parentElement.parentElement && 
-					from.parentElement.parentElement.getAttribute("class")==="vertical-center") {
+					(from.parentElement.parentElement.getAttribute("class")==="vertical-bottom" || 
+					from.parentElement.parentElement.getAttribute("class")==="vertical-center")
+					) {
 				
 				from.style.backgroundColor = "grey";
 				
@@ -1819,7 +1932,11 @@ class Wayoslet extends HTMLElement {
 					let fadeOutAnimation = from.parentElement.parentElement.animate(fadeOut, timing);
 					fadeOutAnimation.onfinish = (event) => {
 						
-						from.parentElement.parentElement.innerHTML="";					
+						try {
+							from.parentElement.parentElement.innerHTML="";					
+						} catch (e) {
+							console.log(e);
+						}
 						
 					};
 					
@@ -1849,7 +1966,7 @@ class Wayoslet extends HTMLElement {
 			//if (parentElement.frameUX.content)
 				//parentElement.frameUX.content.innerHTML = "";
 			
-			parentElement.removeLoader();
+			parentElement.removeLoader();			
 			
 			//TODO: Reload only src is not blank to switch from widget to blank frame src					
 			if (parentElement.frameUX.isWidget())
@@ -1940,7 +2057,7 @@ class Wayoslet extends HTMLElement {
 	
 		this.audio.src = src;
 		
-		console.log("Play Audio: " + this.audio.src);
+		//console.log("Play Audio: " + this.audio.src);
 		
 		try {
 			this.audio.play();			
