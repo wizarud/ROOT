@@ -37,11 +37,10 @@
 
 %>
 
-<% if (properties.optString("title")!=null) { %>
-<title><%= properties.optString("title") %></title>
-<% } else { %>
-<title>wayOS</title>
-<% } %>
+<title>
+<% if (properties.optString("title")!=null) { %><%= properties.optString("title") %> ~ <% } %>Story Game Online – Play Interactive Stories & Create Your Own Adventures
+</title>
+<meta name="description" content="Play story games online with branching choices, dynamic outcomes, and random events. Create your own interactive stories and design engaging experiences easily.">
 
 <%@ include file="css.jspf" %>
 
