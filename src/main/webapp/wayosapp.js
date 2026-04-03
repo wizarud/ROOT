@@ -19,8 +19,10 @@ class WayOS {
 			this.websocketURL = this.websocketURL.replace('http', 'ws');			
 		}
 		this.coverImageURL = this.webhookURL.replace('webhooks', 'public') + '.PNG';
-		this.defaultMenuImageURL = this.webhookURL.substring(0, this.webhookURL.indexOf('/webhooks')) + '/images/gigi.png';
-		this.ringURL = '/ogg/question_003.ogg';
+		
+		this.domain = this.webhookURL.substring(0, this.webhookURL.indexOf('/webhooks'));
+		this.defaultMenuImageURL = this.domain + '/images/gigi.png';
+		this.ringURL = this.domain + '/ogg/question_003.ogg';
 
 		this.sessionId = sessionId;
 		
@@ -826,6 +828,16 @@ class FrameUX {
 		
 		return unsafe.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 	}
+	
+	publicURL (src) {
+		
+		//Correct /public/.. resource to full URL
+		if (src.startsWith('/public/')) {
+			return this.parentElement.wayOS.domain + src;
+		}
+		
+		return src;
+	}
 
 }
 
@@ -969,7 +981,7 @@ class AnimateFrameUX extends FrameUX {
 				video.setAttribute("playsinline", "false");
 			    video.setAttribute("webkit-playsinline", "false");
 				
-				video.src = message.src;
+				video.src = this.publicURL(message.src);
 				video.style.display = 'none';
 				video.style.width = '0';
 				video.style.height = '0';
@@ -1051,89 +1063,9 @@ class AnimateFrameUX extends FrameUX {
 			    video.play();
 			}
 			
-			if (message.type==='_video') {
-				
-				this.clearIconImage();
-				this.clearBackgroundImage();
-				
-				let video = document.createElement('video');
-				
-				video.src = message.src;
-												
-				this.icon.appendChild(video);
-
-				video.onended = function() {
-										
-					//this.clearIconImage();//Clear					
-					
-					let canvas = document.createElement('canvas');
-					
-					canvas.width = video.videoWidth;
-					canvas.height = video.videoHeight;
-					
-					let ctx = canvas.getContext('2d');					
-					
-					ctx.drawImage(video, 0, 0, canvas.width, canvas.height);					
-					
-					let videoCapturedURI = canvas.toDataURL('image/png');
-										
-					this.setIconImage(this.img(videoCapturedURI), (frame)=>{if (next) next()});
-					
-					video.remove();
-			
-				}.bind(this);
-				
-				video.onplay = function () {
-					
-					const timing = {
-					  		duration: 1000,
-							iterations: 1,
-						};
-					
-					let fadeIn = [
-						{ opacity: "0" },
-						{ opacity: "1" },
-					];				
-					
-					let fadeInAnimation = video.animate(fadeIn, timing);
-					fadeInAnimation.onfinish = (event) => {
-						
-					};					
-					
-				}.bind(this);
-				
-				video.onerror = function(e) {
-					
-					alert(JSON.stringify(e));
-					
-				}
-				
-				video.onloadedmetadata = function() {
-				    video.setAttribute("width", window.innerWidth > video.videoWidth ? video.videoWidth : window.innerWidth);
-				    video.setAttribute("height", window.innerHeight > video.videoHeight ? video.videoHeight : window.innerHeight);
-				};				
-				
-				video.play().catch(error => {
-					
-					//alert(error);
-					alert("Please press the ring button to start!");
-				    
-				});
-								
-				//video.style.aspectRatio = "unset";
-				//video.style.objectFit = "contain";
-							    
-				// Ensure inline playback on iOS
-			    //video.setAttribute("playsinline", "true");
-			    //video.setAttribute("webkit-playsinline", "true");
-			    
-			    video.play();
-					
-			}
-			
 			if (message.type==='audio') {
 				
-				this.parentElement.play(message.src);
+				this.parentElement.play(this.publicURL(message.src));
 				
 				if (next) next();
 				
@@ -1164,13 +1096,13 @@ class AnimateFrameUX extends FrameUX {
 				if (message.src.endsWith('png') || message.src.endsWith('PNG') ||///Experimental to display gif animation or PNG (transparent bkg) over the background
 					message.src.endsWith('gif') || message.src.endsWith('GIF')) {					
 					
-					this.setIconImage(this.img(message.src), (frame)=>{if (next) next()});
+					this.setIconImage(this.img(this.publicURL(message.src)), (frame)=>{if (next) next()});
 				
 				} 
 				//For jpeg use as background image
 				else {
 					
-					this.setBackgroundImage(message.src, (frame)=>{if (next) next()});
+					this.setBackgroundImage(this.publicURL(message.src), (frame)=>{if (next) next()});
 						
 					try {
 												

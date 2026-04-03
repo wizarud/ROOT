@@ -37,10 +37,8 @@
 
 %>
 
-<title>
-<% if (properties.optString("title")!=null) { %><%= properties.optString("title") %> ~ <% } %>Story Game Online – Play Interactive Stories & Create Your Own Adventures
-</title>
-<meta name="description" content="Play story games online with branching choices, dynamic outcomes, and random events. Create your own interactive stories and design engaging experiences easily.">
+<title><% if (properties.optString("title")!=null) { %><%= properties.optString("title") %> ~ <% } %>Story Game Online | เกมนิยาย เกมจีบสาว เกมจีบหนุ่ม – เล่นและสร้าง Interactive Story</title>
+<meta name="description" content="เล่น Story Game Online และเกมนิยายแบบเลือกเส้นทาง รวมถึงเกมจีบสาว เกมจีบหนุ่ม เกมจีบหญิง เกม yuri เกมจีบลุง เกมจีบป้า ที่มีตัวเลือกและผลลัพธ์หลากหลาย สร้าง Interactive Story ของคุณเองได้ง่ายๆ พร้อมระบบตัวแปร เงื่อนไข และเหตุการณ์แบบสุ่ม">
 
 <%@ include file="css.jspf" %>
 
